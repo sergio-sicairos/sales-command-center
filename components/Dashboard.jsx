@@ -109,6 +109,11 @@ export default function Dashboard() {
   const tGap = aeData.reduce((s, a) => s + (a.gap || 0), 0);
   const quotaAEs = aeData.filter((a) => a.quota > 0).length;
   const qHitters = aeData.filter((a) => a.quota > 0 && a.closed >= a.quota).length;
+  const teamAtt = TEAM_GOAL > 0 ? Math.round((tClosed / TEAM_GOAL) * 100) : 0;
+  const teamGap = Math.max(0, TEAM_GOAL - tClosed);
+  const teamPaceAmt = Math.round(TEAM_GOAL * pace);
+  const teamPaceDiff = tClosed - teamPaceAmt;
+  const teamBarColor = tClosed >= TEAM_GOAL ? "#16a34a" : tClosed / TEAM_GOAL >= pace ? "#3b82f6" : tClosed / TEAM_GOAL >= pace * 0.8 ? "#eab308" : "#dc2626";
   const tBookings = sdrData.reduce((s, a) => s + a.booked, 0);
   const tPending = sdrData.reduce((s, a) => s + a.pending, 0);
   const tQualified = sdrData.reduce((s, a) => s + a.qualified, 0);
@@ -239,6 +244,44 @@ export default function Dashboard() {
           <div className="kpi"><div className="kpi-label">Gap Remaining</div><div className="kpi-val" style={{ color: tClosed >= TEAM_GOAL ? "#16a34a" : "#dc2626" }}>{fmtF(Math.max(0, TEAM_GOAL - tClosed))}</div><div className="kpi-sub">{qHitters}/{quotaAEs} at quota</div></div>
           <div className="kpi"><div className="kpi-label">SDR Meetings</div><div className="kpi-val">{tBookings}</div><div className="kpi-sub">{tPending} pending · {tQualified} qual'd</div></div>
         </div>
+
+        {/* ===== TEAM GOAL BAR ===== */}
+        {!loading && !error && data && (
+          <div style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 16, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#475569", marginBottom: 8 }}>Monthly Team Goal — {cm} {cy}</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                  <span style={{ fontSize: isTV ? 26 : 36, fontWeight: 700, color: "#f1f5f9", letterSpacing: -1, fontFamily: "'DM Sans',sans-serif" }}>{fmtF(tClosed)}</span>
+                  <span style={{ fontSize: isTV ? 13 : 17, color: "#334155", fontWeight: 500 }}>of {fmtF(TEAM_GOAL)}</span>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: isTV ? 20 : 32, alignItems: "flex-start" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: teamBarColor, letterSpacing: -0.5 }}>{teamAtt}%</div>
+                  <div style={{ fontSize: 10, color: "#475569", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Attainment</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: teamGap === 0 ? "#34d399" : "#f87171", letterSpacing: -0.5 }}>{teamGap === 0 ? "Done!" : `-${fmtF(teamGap)}`}</div>
+                  <div style={{ fontSize: 10, color: "#475569", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Gap</div>
+                </div>
+              </div>
+            </div>
+            {/* Progress bar with pace marker */}
+            <div style={{ position: "relative", width: "100%", height: 14, borderRadius: 7, background: "#1e293b", marginBottom: 14 }}>
+              <div style={{ width: `${Math.min(teamAtt, 100)}%`, height: "100%", borderRadius: 7, background: `linear-gradient(90deg, ${teamBarColor}88, ${teamBarColor})`, transition: "width 0.8s ease" }} />
+              <div style={{ position: "absolute", top: -5, left: `${Math.min(pace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 24, background: "#475569", borderRadius: 1 }} title="Month pace" />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 24 }}>
+                <div><span style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 }}>Pace </span><span style={{ fontSize: 13, fontWeight: 600, color: teamPaceDiff >= 0 ? "#34d399" : "#f87171" }}>{teamPaceDiff >= 0 ? `+${fmtF(teamPaceDiff)}` : `-${fmtF(Math.abs(teamPaceDiff))}`}</span></div>
+                <div><span style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtF(teamPaceAmt)}</span></div>
+                <div><span style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{qHitters}/{quotaAEs} reps</span></div>
+              </div>
+              <div style={{ fontSize: 11, color: "#334155" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
+            </div>
+          </div>
+        )}
 
         {loading && !data ? (
           <div className="card"><div className="loader"><div className="spinner" /><div style={{ marginTop: 14, fontSize: 12, color: "#94a3b8" }}>Querying Salesforce…</div></div></div>
