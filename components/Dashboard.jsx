@@ -289,6 +289,7 @@ export default function Dashboard() {
               const st = getStatus(ae.closed, q);
               const bc = attColor(att);
               const gapVal = ae.gap || 0;
+              const ex = expanded === `ae-${i}`;
               return (
                 <div className="tv-card" key={ae.name}>
                   <span className="tv-rank">#{i + 1}</span>
@@ -308,7 +309,22 @@ export default function Dashboard() {
                     <span className="tv-att" style={{ color: bc }}>{att}%</span>
                     <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#dc2626" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
                   </div>
-                  <div className="tv-footer"><StatusPill status={st} compact /></div>
+                  <div className="tv-footer" style={{ justifyContent: "space-between" }}>
+                    <StatusPill status={st} compact />
+                    {ae.deals?.length > 0 && (
+                      <span onClick={() => setExpanded(ex ? null : `ae-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
+                    )}
+                  </div>
+                  {ex && ae.deals?.length > 0 && (
+                    <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
+                      {ae.deals.sort((a, b) => b.arr - a.arr).map((d, j) => (
+                        <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
+                          <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -362,12 +378,7 @@ export default function Dashboard() {
                           <div><div style={{ display: "flex", alignItems: "baseline", gap: 5 }}><span className="val">{fmtF(Math.round(ae.closed))}</span><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 400 }}>of {q > 0 ? fmt(q) : "$0"}</span></div><Bar value={ae.closed} max={q || ae.closed || 1} color={bc} /></div>
                           <div><span className="att-val" style={{ color: bc }}>{att}%</span></div>
                           <div>{gapVal === 0 ? <span className="gap-hit">$0</span> : <span className="gap-miss">-{fmt(gapVal)}</span>}</div>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10 }}>
-                            <StatusPill status={st} />
-                            {ae.deals?.length > 0 && (
-                              <span style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1 }}>{ex ? "−" : "+"}</span>
-                            )}
-                          </div>
+                          <div><StatusPill status={st} /></div>
                         </div>
                       </div>
                       {ex && ae.deals?.length > 0 && (
