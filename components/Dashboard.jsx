@@ -101,6 +101,7 @@ export default function Dashboard() {
   const aeData = data?.aeData || [];
   const sdrData = data?.sdrData || [];
   const SDR_QUOTA = data?.config?.SDR_MEETING_QUOTA || 20;
+  const TEAM_GOAL = data?.config?.TEAM_GOAL || 1900000;
   const meta = data?.meta || {};
   const tClosed = aeData.reduce((s, a) => s + a.closed, 0);
   const tDeals = aeData.reduce((s, a) => s + a.cnt, 0);
@@ -234,8 +235,8 @@ export default function Dashboard() {
         {/* KPIs */}
         <div className="kpi-row">
           <div className="kpi"><div className="kpi-label">Team Closed ARR</div><div className="kpi-val">{fmtF(tClosed)}</div><div className="kpi-sub">{tDeals} deals</div></div>
-          <div className="kpi"><div className="kpi-label">Team Quota</div><div className="kpi-val">{fmtF(tQuota)}</div><div className="kpi-sub">{quotaAEs} active quotas</div></div>
-          <div className="kpi"><div className="kpi-label">Gap Remaining</div><div className="kpi-val" style={{ color: tGap === 0 ? "#16a34a" : "#dc2626" }}>{fmtF(tGap)}</div><div className="kpi-sub">{qHitters}/{quotaAEs} at quota</div></div>
+          <div className="kpi"><div className="kpi-label">Monthly Goal</div><div className="kpi-val">{fmtF(TEAM_GOAL)}</div><div className="kpi-sub">{quotaAEs} active quotas</div></div>
+          <div className="kpi"><div className="kpi-label">Gap Remaining</div><div className="kpi-val" style={{ color: tClosed >= TEAM_GOAL ? "#16a34a" : "#dc2626" }}>{fmtF(Math.max(0, TEAM_GOAL - tClosed))}</div><div className="kpi-sub">{qHitters}/{quotaAEs} at quota</div></div>
           <div className="kpi"><div className="kpi-label">SDR Meetings</div><div className="kpi-val">{tBookings}</div><div className="kpi-sub">{tPending} pending · {tQualified} qual'd</div></div>
         </div>
 
@@ -279,9 +280,9 @@ export default function Dashboard() {
             <div className="tv-summary">
               <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>Team Total</div>
               <div><div className="tv-summary-label">Closed</div><div className="tv-summary-val">{fmtF(tClosed)}</div></div>
-              <div><div className="tv-summary-label">Quota</div><div className="tv-summary-val">{fmtF(tQuota)}</div></div>
-              <div><div className="tv-summary-label">Gap</div><div className="tv-summary-val" style={{ color: tGap === 0 ? "#34d399" : "#f87171" }}>{fmtF(tGap)}</div></div>
-              <div><div className="tv-summary-label">Attainment</div><div className="tv-summary-val">{tQuota > 0 ? Math.round(tClosed / tQuota * 100) : 0}%</div></div>
+              <div><div className="tv-summary-label">Goal</div><div className="tv-summary-val">{fmtF(TEAM_GOAL)}</div></div>
+              <div><div className="tv-summary-label">Gap</div><div className="tv-summary-val" style={{ color: tClosed >= TEAM_GOAL ? "#34d399" : "#f87171" }}>{fmtF(Math.max(0, TEAM_GOAL - tClosed))}</div></div>
+              <div><div className="tv-summary-label">Attainment</div><div className="tv-summary-val">{Math.round(tClosed / TEAM_GOAL * 100)}%</div></div>
               <div><div className="tv-summary-label">At Quota</div><div className="tv-summary-val">{qHitters}/{quotaAEs}</div></div>
               <div style={{ marginTop: 4 }}>
                 <div className="tv-summary-label">Month Progress</div>
