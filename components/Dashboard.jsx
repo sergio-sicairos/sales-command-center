@@ -247,38 +247,38 @@ export default function Dashboard() {
 
         {/* ===== TEAM GOAL BAR ===== */}
         {!loading && !error && data && (
-          <div style={{ background: "#0f172a", border: "1px solid #1e293b", borderRadius: 16, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
+          <div style={{ background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
-                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#475569", marginBottom: 8 }}>Monthly Team Goal — {cm} {cy}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>Monthly Team Goal — {cm} {cy}</div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
-                  <span style={{ fontSize: isTV ? 26 : 36, fontWeight: 700, color: "#f1f5f9", letterSpacing: -1, fontFamily: "'DM Sans',sans-serif" }}>{fmtF(tClosed)}</span>
-                  <span style={{ fontSize: isTV ? 13 : 17, color: "#334155", fontWeight: 500 }}>of {fmtF(TEAM_GOAL)}</span>
+                  <span style={{ fontSize: isTV ? 26 : 36, fontWeight: 700, color: "#0f172a", letterSpacing: -1, fontFamily: "'DM Sans',sans-serif" }}>{fmtF(tClosed)}</span>
+                  <span style={{ fontSize: isTV ? 13 : 17, color: "#94a3b8", fontWeight: 500 }}>of {fmtF(TEAM_GOAL)}</span>
                 </div>
               </div>
               <div style={{ display: "flex", gap: isTV ? 20 : 32, alignItems: "flex-start" }}>
                 <div style={{ textAlign: "center" }}>
                   <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: teamBarColor, letterSpacing: -0.5 }}>{teamAtt}%</div>
-                  <div style={{ fontSize: 10, color: "#475569", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Attainment</div>
+                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Attainment</div>
                 </div>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: teamGap === 0 ? "#34d399" : "#f87171", letterSpacing: -0.5 }}>{teamGap === 0 ? "Done!" : `-${fmtF(teamGap)}`}</div>
-                  <div style={{ fontSize: 10, color: "#475569", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Gap</div>
+                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: teamGap === 0 ? "#16a34a" : "#dc2626", letterSpacing: -0.5 }}>{teamGap === 0 ? "Done!" : `-${fmtF(teamGap)}`}</div>
+                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Gap</div>
                 </div>
               </div>
             </div>
             {/* Progress bar with pace marker */}
-            <div style={{ position: "relative", width: "100%", height: 14, borderRadius: 7, background: "#1e293b", marginBottom: 14 }}>
-              <div style={{ width: `${Math.min(teamAtt, 100)}%`, height: "100%", borderRadius: 7, background: `linear-gradient(90deg, ${teamBarColor}88, ${teamBarColor})`, transition: "width 0.8s ease" }} />
-              <div style={{ position: "absolute", top: -5, left: `${Math.min(pace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 24, background: "#475569", borderRadius: 1 }} title="Month pace" />
+            <div style={{ position: "relative", width: "100%", height: 10, borderRadius: 5, background: "#e2e8f0", marginBottom: 14 }}>
+              <div style={{ width: `${Math.min(teamAtt, 100)}%`, height: "100%", borderRadius: 5, background: teamBarColor, transition: "width 0.8s ease" }} />
+              <div style={{ position: "absolute", top: -4, left: `${Math.min(pace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 18, background: "#cbd5e1", borderRadius: 1 }} title="Month pace" />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", gap: 24 }}>
-                <div><span style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 }}>Pace </span><span style={{ fontSize: 13, fontWeight: 600, color: teamPaceDiff >= 0 ? "#34d399" : "#f87171" }}>{teamPaceDiff >= 0 ? `+${fmtF(teamPaceDiff)}` : `-${fmtF(Math.abs(teamPaceDiff))}`}</span></div>
-                <div><span style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtF(teamPaceAmt)}</span></div>
-                <div><span style={{ fontSize: 10, color: "#475569", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{qHitters}/{quotaAEs} reps</span></div>
+                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Pace </span><span style={{ fontSize: 13, fontWeight: 600, color: teamPaceDiff >= 0 ? "#16a34a" : "#dc2626" }}>{teamPaceDiff >= 0 ? `+${fmtF(teamPaceDiff)}` : `-${fmtF(Math.abs(teamPaceDiff))}`}</span></div>
+                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtF(teamPaceAmt)}</span></div>
+                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{qHitters}/{quotaAEs} reps</span></div>
               </div>
-              <div style={{ fontSize: 11, color: "#334155" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
+              <div style={{ fontSize: 11, color: "#94a3b8" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
             </div>
           </div>
         )}
