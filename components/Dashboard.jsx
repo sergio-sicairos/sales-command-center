@@ -247,7 +247,7 @@ export default function Dashboard() {
 
         {/* ===== TEAM GOAL BAR ===== */}
         {!loading && !error && data && (
-          <div style={{ background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
+          <div style={{ background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
                 <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>Monthly Team Goal — {cm} {cy}</div>
@@ -268,7 +268,7 @@ export default function Dashboard() {
               </div>
             </div>
             {/* Progress bar with pace marker */}
-            <div style={{ position: "relative", width: "100%", height: 10, borderRadius: 5, background: "#fef3c7", marginBottom: 14 }}>
+            <div style={{ position: "relative", width: "100%", height: 10, borderRadius: 5, background: "#ede9e3", marginBottom: 14 }}>
               <div style={{ width: `${Math.min(teamAtt, 100)}%`, height: "100%", borderRadius: 5, background: teamBarColor, transition: "width 0.8s ease" }} />
               <div style={{ position: "absolute", top: -4, left: `${Math.min(pace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 18, background: "#cbd5e1", borderRadius: 1 }} title="Month pace" />
             </div>
