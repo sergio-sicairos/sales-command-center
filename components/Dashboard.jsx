@@ -22,6 +22,104 @@ const AVATARS = {
   "Nate Siebert": "/avatars/nate-siebert.jpg",
 };
 
+const QUOTES = [
+  { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+  { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+  { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+  { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+  { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+  { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+  { text: "Whether you think you can or think you can't, you're right.", author: "Henry Ford" },
+  { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" },
+  { text: "I find that the harder I work, the more luck I seem to have.", author: "Thomas Jefferson" },
+  { text: "Opportunities don't happen. You create them.", author: "Chris Grosser" },
+  { text: "Don't be afraid to give up the good to go for the great.", author: "John D. Rockefeller" },
+  { text: "I never dreamed about success. I worked for it.", author: "Estée Lauder" },
+  { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+  { text: "Success is walking from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+  { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+  { text: "Strive not to be a success, but rather to be of value.", author: "Albert Einstein" },
+  { text: "Either you run the day, or the day runs you.", author: "Jim Rohn" },
+  { text: "When everything seems to be going against you, remember that the airplane takes off against the wind, not with it.", author: "Henry Ford" },
+  { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+  { text: "Go confidently in the direction of your dreams. Live the life you have imagined.", author: "Henry David Thoreau" },
+  { text: "The only place where success comes before work is in the dictionary.", author: "Vidal Sassoon" },
+  { text: "In the middle of every difficulty lies opportunity.", author: "Albert Einstein" },
+  { text: "The greatest glory in living lies not in never falling, but in rising every time we fall.", author: "Nelson Mandela" },
+  { text: "Do what you can, with what you have, where you are.", author: "Theodore Roosevelt" },
+  { text: "Life is 10% what happens to us and 90% how we react to it.", author: "Charles R. Swindoll" },
+  { text: "Too many of us are not living our dreams because we are living our fears.", author: "Les Brown" },
+  { text: "Continuous effort — not strength or intelligence — is the key to unlocking our potential.", author: "Winston Churchill" },
+  { text: "What you get by achieving your goals is not as important as what you become by achieving your goals.", author: "Zig Ziglar" },
+  { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+  { text: "Act as if what you do makes a difference. It does.", author: "William James" },
+  { text: "Every no gets me closer to a yes.", author: "Unknown" },
+  { text: "Sales are contingent upon the attitude of the salesman, not the attitude of the prospect.", author: "W. Clement Stone" },
+  { text: "Make a customer, not a sale.", author: "Katherine Barchetti" },
+  { text: "If you are not taking care of your customer, your competitor will.", author: "Bob Hooey" },
+  { text: "You don't close a sale, you open a relationship.", author: "Patricia Fripp" },
+  { text: "Approach each customer with the idea of helping them solve a problem or achieve a goal.", author: "Brian Tracy" },
+  { text: "Stop selling. Start helping.", author: "Zig Ziglar" },
+  { text: "Your attitude, not your aptitude, will determine your altitude.", author: "Zig Ziglar" },
+  { text: "People don't buy what you do; they buy why you do it.", author: "Simon Sinek" },
+  { text: "In sales, it's not about having the right opportunity. It's about handling the opportunities right.", author: "Mark Hunter" },
+  { text: "The most unprofitable item ever manufactured is an excuse.", author: "John Mason" },
+  { text: "Pipeline is everything. Build it every day.", author: "Unknown" },
+  { text: "A goal is a dream with a deadline.", author: "Napoleon Hill" },
+  { text: "The secret to closing is in your prep, not your pitch.", author: "Unknown" },
+  { text: "The best salespeople wonder what it would be like to be in the other person's shoes.", author: "Jeffrey Gitomer" },
+  { text: "Activity beats passivity every day of the week.", author: "Unknown" },
+  { text: "Every morning you have two choices: continue to sleep with your dreams, or wake up and chase them.", author: "Unknown" },
+  { text: "Success in sales is the result of discipline, dedication, and sacrifice.", author: "Thomas Roy Cromwell" },
+  { text: "Your most unhappy customers are your greatest source of learning.", author: "Bill Gates" },
+  { text: "The key is not to prioritize what's on your schedule, but to schedule your priorities.", author: "Stephen Covey" },
+  { text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+  { text: "I've failed over and over and over again in my life. And that is why I succeed.", author: "Michael Jordan" },
+  { text: "You have to expect things of yourself before you can do them.", author: "Michael Jordan" },
+  { text: "Talent wins games, but teamwork and intelligence win championships.", author: "Michael Jordan" },
+  { text: "Some people want it to happen, some wish it would happen, others make it happen.", author: "Michael Jordan" },
+  { text: "Champions keep playing until they get it right.", author: "Billie Jean King" },
+  { text: "The difference between ordinary and extraordinary is that little extra.", author: "Jimmy Johnson" },
+  { text: "Winning isn't everything, but wanting to win is.", author: "Vince Lombardi" },
+  { text: "It's not whether you get knocked down; it's whether you get up.", author: "Vince Lombardi" },
+  { text: "The will to win is important, but the will to prepare is vital.", author: "Joe Paterno" },
+  { text: "Gold medals are made of sweat, determination, and a hard-to-find alloy called guts.", author: "Dan Gable" },
+  { text: "Pain is temporary. Quitting lasts forever.", author: "Lance Armstrong" },
+  { text: "Make each day your masterpiece.", author: "John Wooden" },
+  { text: "There may be people that have more talent than you, but there's no excuse for anyone to work harder than you do.", author: "Derek Jeter" },
+  { text: "If you train hard, you'll not only be hard, you'll be hard to beat.", author: "Herschel Walker" },
+  { text: "Without self-discipline, success is impossible, period.", author: "Lou Holtz" },
+  { text: "Set your goals high, and don't stop till you get there.", author: "Bo Jackson" },
+  { text: "Push yourself again and again. Don't give an inch until the final buzzer sounds.", author: "Larry Bird" },
+  { text: "I never left the field saying I could have done more to get ready and that gives me peace of mind.", author: "Peyton Manning" },
+  { text: "It's hard to beat a person who never gives up.", author: "Babe Ruth" },
+  { text: "I hated every minute of training, but I said, don't quit. Suffer now and live the rest of your life as a champion.", author: "Muhammad Ali" },
+  { text: "The fight is won or lost far away from witnesses — in the gym, and out there on the road, long before I dance under those lights.", author: "Muhammad Ali" },
+  { text: "Float like a butterfly, sting like a bee.", author: "Muhammad Ali" },
+  { text: "You can't put a limit on anything. The more you dream, the farther you get.", author: "Michael Phelps" },
+  { text: "The more difficult the victory, the greater the happiness in winning.", author: "Pelé" },
+  { text: "If you can believe it, the mind can achieve it.", author: "Ronnie Lott" },
+  { text: "The secret is to work less as individuals and more as a team. As a coach, I play not my eleven best, but my best eleven.", author: "Knute Rockne" },
+  { text: "It ain't about how hard you hit. It's about how hard you can get hit and keep moving forward.", author: "Rocky Balboa" },
+  { text: "The only way to prove you're a good sport is to lose.", author: "Ernie Banks" },
+  { text: "Do you know what my favorite part of the game is? The opportunity to play.", author: "Mike Singletary" },
+  { text: "I've missed more than 9,000 shots in my career. I've lost almost 300 games. I've failed over and over. That is why I succeed.", author: "Michael Jordan" },
+  { text: "Success is no accident. It is hard work, perseverance, learning, studying, sacrifice and most of all, love of what you are doing.", author: "Pelé" },
+  { text: "The way a team plays as a whole determines its success. You may have the greatest bunch of individual stars in the world, but if they don't play together, the club won't be worth a dime.", author: "Babe Ruth" },
+  { text: "Don't watch the clock; do what it does. Keep going.", author: "Sam Levenson" },
+  { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+  { text: "If you can dream it, you can do it.", author: "Walt Disney" },
+  { text: "Believe in yourself. You are braver than you think, more talented than you know, and capable of more than you imagine.", author: "Roy T. Bennett" },
+  { text: "The secret of success is to do the common thing uncommonly well.", author: "John D. Rockefeller Jr." },
+  { text: "Don't let yesterday take up too much of today.", author: "Will Rogers" },
+  { text: "We generate fears while we sit. We overcome them by action.", author: "Dr. Henry Link" },
+  { text: "You've got to get up every morning with determination if you're going to go to bed with satisfaction.", author: "George Lorimer" },
+  { text: "To see what is right and not do it is a lack of courage.", author: "Confucius" },
+  { text: "Reading is to the mind, as exercise is to the body.", author: "Brian Tracy" },
+  { text: "Motivation is what gets you started. Habit is what keeps you going.", author: "Jim Ryun" },
+  { text: "When you reach the end of your rope, tie a knot in it and hang on.", author: "Franklin D. Roosevelt" },
+];
+
 function Avatar({ name, size = 42 }) {
   const [failed, setFailed] = useState(false);
   const url = AVATARS[name];
@@ -328,22 +426,18 @@ export default function Dashboard() {
                 </div>
               );
             })}
-            {/* Team Summary Card */}
-            <div className="tv-summary">
-              <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 4 }}>Team Total</div>
-              <div><div className="tv-summary-label">Closed</div><div className="tv-summary-val">{fmtF(tClosed)}</div></div>
-              <div><div className="tv-summary-label">Goal</div><div className="tv-summary-val">{fmtF(TEAM_GOAL)}</div></div>
-              <div><div className="tv-summary-label">Gap</div><div className="tv-summary-val" style={{ color: tClosed >= TEAM_GOAL ? "#34d399" : "#f87171" }}>{fmtF(Math.max(0, TEAM_GOAL - tClosed))}</div></div>
-              <div><div className="tv-summary-label">Attainment</div><div className="tv-summary-val">{Math.round(tClosed / TEAM_GOAL * 100)}%</div></div>
-              <div><div className="tv-summary-label">At Quota</div><div className="tv-summary-val">{qHitters}/{quotaAEs}</div></div>
-              <div style={{ marginTop: 4 }}>
-                <div className="tv-summary-label">Month Progress</div>
-                <div style={{ width: "100%", height: 4, borderRadius: 2, background: "#1e293b", overflow: "hidden", marginTop: 4 }}>
-                  <div style={{ width: `${Math.round(pace * 100)}%`, height: "100%", borderRadius: 2, background: "linear-gradient(90deg, #34d399, #60a5fa)" }} />
+            {/* Daily Quote Card */}
+            {(() => {
+              const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+              return (
+                <div className="tv-summary" style={{ justifyContent: "center" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569" }}>Daily Motivation</div>
+                  <div style={{ fontSize: 40, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
+                  <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.65, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
+                  <div style={{ fontSize: 11, color: "#475569", marginTop: 8 }}>— {q.author}</div>
                 </div>
-                <div className="tv-summary-sub" style={{ marginTop: 3 }}>Day {dom}/{dim} · {Math.round(pace * 100)}%</div>
-              </div>
-            </div>
+              );
+            })()}
           </div>
         ) : (
           /* ============ TABLE VIEW ============ */
