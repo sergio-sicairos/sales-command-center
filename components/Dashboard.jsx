@@ -162,8 +162,22 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
   const [time, setTime] = useState(new Date());
   const [expanded, setExpanded] = useState(null);
+  const [tvZoom, setTvZoom] = useState(1);
+  const [tvHeight, setTvHeight] = useState("auto");
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
+
+  useEffect(() => {
+    const compute = () => {
+      if (viewMode !== "tv") { setTvZoom(1); setTvHeight("auto"); return; }
+      const zoom = window.innerWidth / 1440;
+      setTvZoom(zoom);
+      setTvHeight(`${Math.round(window.innerHeight / zoom)}px`);
+    };
+    compute();
+    window.addEventListener("resize", compute);
+    return () => window.removeEventListener("resize", compute);
+  }, [viewMode]);
 
   const now = new Date();
   const MN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -223,7 +237,7 @@ export default function Dashboard() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .dc { max-width: ${isTV ? "100%" : "1400px"}; margin: 0 auto; padding: ${isTV ? "20px 28px" : "32px 40px"}; ${isTV ? "display: flex; flex-direction: column; height: 100%;" : ""} }
+        .dc { max-width: ${isTV ? "none" : "1400px"}; margin: 0 auto; padding: ${isTV ? "20px 28px" : "32px 40px"}; ${isTV ? "display: flex; flex-direction: column;" : ""} }
         .hdr { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: ${isTV ? "16px" : "28px"}; flex-wrap: wrap; gap: 12px; }
         .hdr h1 { font-size: ${isTV ? "18px" : "22px"}; font-weight: 700; color: #0f172a; letter-spacing: -0.3px; }
         .hdr .sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
@@ -321,7 +335,7 @@ export default function Dashboard() {
         @media (max-width: 800px) { .kpi-row { grid-template-columns: 1fr 1fr; } .dc { padding: 20px 16px; } .tv-grid { grid-template-columns: repeat(2, 1fr); } }
       `}</style>
 
-      <div className="dc">
+      <div className="dc" style={isTV ? { zoom: tvZoom, width: "1440px", height: tvHeight } : {}}>
         {/* HEADER */}
         <div className="hdr">
           <div>
