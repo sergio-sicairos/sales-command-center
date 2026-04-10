@@ -177,7 +177,7 @@ export default function Dashboard() {
   }, [viewMode]);
 
   const now = new Date();
-  const MN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const MN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const cm = MN[now.getMonth()], cy = now.getFullYear();
   const dim = new Date(cy, now.getMonth() + 1, 0).getDate(), dom = now.getDate(), pace = dom / dim;
 
