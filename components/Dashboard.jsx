@@ -172,7 +172,7 @@ export default function Dashboard() {
       if (viewMode !== "tv") { setTvZoom(1); setTvHeight("auto"); return; }
       const zoom = window.innerWidth / 1440;
       setTvZoom(zoom);
-      setTvHeight(`${Math.round(window.innerHeight / zoom)}px`);
+      setTvHeight(`${Math.floor(window.innerHeight / zoom) - 2}px`);
     };
     compute();
     window.addEventListener("resize", compute);
@@ -233,7 +233,7 @@ export default function Dashboard() {
   const isTV = viewMode === "tv";
 
   return (
-    <div style={{ ...(isTV ? { height: "100vh", overflow: "hidden" } : { minHeight: "100vh" }), background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+    <div style={{ ...(isTV ? { height: "100vh", overflow: "auto" } : { minHeight: "100vh" }), background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif", overflowX: "hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -306,7 +306,7 @@ export default function Dashboard() {
         .loader { padding: 80px 0; text-align: center; }
         .spinner { display: inline-block; width: 24px; height: 24px; border: 2px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: sp 0.7s linear infinite; }
         @keyframes sp { to { transform: rotate(360deg); } }
-        .src { margin-top: 16px; font-size: 10px; color: #cbd5e1; padding: 10px 0; }
+        .src { margin-top: 16px; font-size: 10px; color: #cbd5e1; padding: 10px 0; ${isTV ? "display: none;" : ""} }
         .pacing-badge { font-size: 12px; font-weight: 600; }
         .stage-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; }
 
