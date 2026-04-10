@@ -169,7 +169,7 @@ export default function Dashboard() {
   useEffect(() => {
     const compute = () => {
       if (viewMode !== "tv") { setTvScale(1); return; }
-      setTvScale(Math.min(window.innerWidth / 1440, window.innerHeight / 900));
+      setTvScale(Math.min(window.innerWidth / 1440, window.innerHeight / 940));
     };
     compute();
     window.addEventListener("resize", compute);
@@ -332,7 +332,7 @@ export default function Dashboard() {
         @media (max-width: 800px) { .kpi-row { grid-template-columns: 1fr 1fr; } .dc { padding: 20px 16px; } .tv-grid { grid-template-columns: repeat(2, 1fr); } }
       `}</style>
 
-      <div className="dc" style={isTV ? { width: "1440px", height: "900px", transform: `scale(${tvScale})`, transformOrigin: "top center", flexShrink: 0, overflow: "hidden" } : {}}>
+      <div className="dc" style={isTV ? { width: "1440px", height: "940px", transform: `scale(${tvScale})`, transformOrigin: "top center", flexShrink: 0, overflow: "hidden" } : {}}>
         {/* HEADER */}
         <div className="hdr">
           <div>
