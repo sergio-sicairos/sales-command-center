@@ -237,13 +237,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* KPIs */}
-        <div className="kpi-row">
-          <div className="kpi"><div className="kpi-label">Team Closed ARR</div><div className="kpi-val">{fmtF(tClosed)}</div><div className="kpi-sub">{tDeals} deals</div></div>
-          <div className="kpi"><div className="kpi-label">Monthly Goal</div><div className="kpi-val">{fmtF(TEAM_GOAL)}</div><div className="kpi-sub">{quotaAEs} active quotas</div></div>
-          <div className="kpi"><div className="kpi-label">Gap Remaining</div><div className="kpi-val" style={{ color: tClosed >= TEAM_GOAL ? "#16a34a" : "#dc2626" }}>{fmtF(Math.max(0, TEAM_GOAL - tClosed))}</div><div className="kpi-sub">{qHitters}/{quotaAEs} at quota</div></div>
-          <div className="kpi"><div className="kpi-label">SDR Meetings</div><div className="kpi-val">{tBookings}</div><div className="kpi-sub">{tPending} pending · {tQualified} qual'd</div></div>
-        </div>
 
         {/* ===== TEAM GOAL BAR ===== */}
         {!loading && !error && data && (
