@@ -168,7 +168,6 @@ export default function Dashboard() {
         .row-inner { }
 
         .rank { font-size: 14px; font-weight: 700; color: #cbd5e1; min-width: 20px; }
-        .rank.gold { color: #f59e0b; }
         .name-cell { display: flex; align-items: center; gap: 12px; }
         .name-primary { font-size: 14px; font-weight: 600; color: #0f172a; }
         .name-sub { font-size: 11px; color: #94a3b8; margin-top: 1px; }
@@ -198,9 +197,8 @@ export default function Dashboard() {
         .tv-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; position: relative; }
         .tv-card:hover { border-color: #cbd5e1; }
         .tv-rank { position: absolute; top: 8px; right: 12px; font-size: 12px; font-weight: 700; color: #cbd5e1; }
-        .tv-rank.gold { color: #f59e0b; }
         .tv-top { display: flex; align-items: center; gap: 10px; }
-        .tv-name { font-size: 13px; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tv-name { font-size: 15px; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .tv-deals { font-size: 10px; color: #94a3b8; margin-top: 1px; }
         .tv-arr { display: flex; align-items: baseline; gap: 4px; }
         .tv-arr-val { font-size: 15px; font-weight: 700; color: #0f172a; }
@@ -256,9 +254,9 @@ export default function Dashboard() {
               const gapVal = ae.gap || 0;
               return (
                 <div className="tv-card" key={ae.name}>
-                  <span className={`tv-rank ${i === 0 ? "gold" : ""}`}>#{i + 1}</span>
+                  <span className="tv-rank">#{i + 1}</span>
                   <div className="tv-top">
-                    <Avatar name={ae.name} size={44} />
+                    <Avatar name={ae.name} size={56} />
                     <div style={{ overflow: "hidden" }}>
                       <div className="tv-name">{ae.name}</div>
                       <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
@@ -320,7 +318,7 @@ export default function Dashboard() {
                       <div className="row-wrap" onClick={() => setExpanded(ex ? null : `ae-${i}`)}>
                         <div className="ae-row row-inner">
                           <div className="name-cell">
-                            <span className={`rank ${i === 0 ? "gold" : ""}`}>{i + 1}</span>
+                            <span className="rank">{i + 1}</span>
                             <Avatar name={ae.name} />
                             <div><div className="name-primary" style={{ whiteSpace: "nowrap" }}>{ae.name}</div><div className="name-sub">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div></div>
                           </div>
@@ -358,7 +356,7 @@ export default function Dashboard() {
                     <div key={s.name}>
                       <div className="row-wrap" onClick={() => setExpanded(ex ? null : `sdr-${i}`)}>
                         <div className="sdr-row row-inner">
-                          <div className="name-cell"><span className={`rank ${i === 0 ? "gold" : ""}`}>{i + 1}</span><Avatar name={s.name} /><div><div className="name-primary">{s.name}</div><div className="name-sub">{s.booked}/{SDR_QUOTA} target</div></div></div>
+                          <div className="name-cell"><span className="rank">{i + 1}</span><Avatar name={s.name} /><div><div className="name-primary">{s.name}</div><div className="name-sub">{s.booked}/{SDR_QUOTA} target</div></div></div>
                           <div><span className="val">{s.booked}</span></div>
                           <div><span className="val-muted">{s.pending}</span></div>
                           <div><span className="val">{s.qualified}</span></div>
