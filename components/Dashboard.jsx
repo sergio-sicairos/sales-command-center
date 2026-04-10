@@ -362,7 +362,12 @@ export default function Dashboard() {
                           <div><div style={{ display: "flex", alignItems: "baseline", gap: 5 }}><span className="val">{fmtF(Math.round(ae.closed))}</span><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 400 }}>of {q > 0 ? fmt(q) : "$0"}</span></div><Bar value={ae.closed} max={q || ae.closed || 1} color={bc} /></div>
                           <div><span className="att-val" style={{ color: bc }}>{att}%</span></div>
                           <div>{gapVal === 0 ? <span className="gap-hit">$0</span> : <span className="gap-miss">-{fmt(gapVal)}</span>}</div>
-                          <div><StatusPill status={st} /></div>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 10 }}>
+                            <StatusPill status={st} />
+                            {ae.deals?.length > 0 && (
+                              <span style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1 }}>{ex ? "−" : "+"}</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                       {ex && ae.deals?.length > 0 && (
