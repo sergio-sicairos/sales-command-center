@@ -219,11 +219,11 @@ export default function Dashboard() {
   const isTV = viewMode === "tv";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+    <div style={{ ...(isTV ? { height: "100vh", overflow: "hidden" } : { minHeight: "100vh" }), background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .dc { max-width: ${isTV ? "100%" : "1400px"}; margin: 0 auto; padding: ${isTV ? "20px 28px" : "32px 40px"}; }
+        .dc { max-width: ${isTV ? "100%" : "1400px"}; margin: 0 auto; padding: ${isTV ? "20px 28px" : "32px 40px"}; ${isTV ? "display: flex; flex-direction: column; height: 100%;" : ""} }
         .hdr { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: ${isTV ? "16px" : "28px"}; flex-wrap: wrap; gap: 12px; }
         .hdr h1 { font-size: ${isTV ? "18px" : "22px"}; font-weight: 700; color: #0f172a; letter-spacing: -0.3px; }
         .hdr .sub { font-size: 12px; color: #94a3b8; margin-top: 4px; }
@@ -297,20 +297,20 @@ export default function Dashboard() {
         .stage-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 5px; }
 
         /* TV CARD GRID */
-        .tv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
-        .tv-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; position: relative; }
+        .tv-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; flex: 1; min-height: 0; grid-auto-rows: 1fr; }
+        .tv-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 10px; position: relative; }
         .tv-card:hover { border-color: #cbd5e1; }
-        .tv-rank { position: absolute; top: 8px; right: 12px; font-size: 12px; font-weight: 700; color: #cbd5e1; }
-        .tv-top { display: flex; align-items: center; gap: 10px; }
-        .tv-name { font-size: 15px; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .tv-deals { font-size: 10px; color: #94a3b8; margin-top: 1px; }
-        .tv-arr { display: flex; align-items: baseline; gap: 4px; }
-        .tv-arr-val { font-size: 15px; font-weight: 700; color: #0f172a; }
-        .tv-arr-of { font-size: 11px; color: #94a3b8; }
+        .tv-rank { position: absolute; top: 10px; right: 14px; font-size: 13px; font-weight: 700; color: #cbd5e1; }
+        .tv-top { display: flex; align-items: center; gap: 12px; }
+        .tv-name { font-size: 16px; font-weight: 600; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .tv-deals { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+        .tv-arr { display: flex; align-items: baseline; gap: 5px; }
+        .tv-arr-val { font-size: 18px; font-weight: 700; color: #0f172a; }
+        .tv-arr-of { font-size: 12px; color: #94a3b8; }
         .tv-stats { display: flex; justify-content: space-between; align-items: center; }
-        .tv-att { font-size: 14px; font-weight: 700; }
-        .tv-gap { font-size: 12px; font-weight: 600; }
-        .tv-footer { display: flex; justify-content: center; margin-top: 2px; }
+        .tv-att { font-size: 16px; font-weight: 700; }
+        .tv-gap { font-size: 13px; font-weight: 600; }
+        .tv-footer { display: flex; justify-content: center; margin-top: auto; }
 
         /* TV Team Summary Card */
         .tv-summary { background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 6px; color: #f1f5f9; }
@@ -433,8 +433,8 @@ export default function Dashboard() {
                 <div className="tv-summary" style={{ justifyContent: "center" }}>
                   <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569" }}>Daily Motivation</div>
                   <div style={{ fontSize: 40, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
-                  <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.65, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
-                  <div style={{ fontSize: 11, color: "#475569", marginTop: 8 }}>— {q.author}</div>
+                  <div style={{ fontSize: 16, color: "#cbd5e1", lineHeight: 1.7, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
+                  <div style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>— {q.author}</div>
                 </div>
               );
             })()}
