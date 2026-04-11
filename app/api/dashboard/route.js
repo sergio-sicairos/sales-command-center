@@ -104,7 +104,7 @@ export async function GET() {
       else if (stage.includes("Lost")) sdrMap[ownerName].lost++;
     }
 
-    const aeData = Object.values(aeMap).sort((a, b) => b.attainment - a.attainment);
+    const aeData = Object.values(aeMap).sort((a, b) => b.closed - a.closed);
     const sdrData = Object.values(sdrMap).sort((a, b) => b.booked - a.booked);
 
     return Response.json({
