@@ -179,6 +179,7 @@ export default function Dashboard() {
   const [time, setTime] = useState(new Date());
   const [expanded, setExpanded] = useState(null);
   const [tvScale, setTvScale] = useState(1);
+  const [loopMode, setLoopMode] = useState(false);
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
@@ -207,6 +208,13 @@ export default function Dashboard() {
     setLoading(false);
   }, []);
   useEffect(() => { load(); }, [load]);
+
+  useEffect(() => {
+    if (!loopMode) return;
+    const t = setInterval(() => setTab((prev) => prev === "ae" ? "sdr" : "ae"), 60000);
+    return () => clearInterval(t);
+  }, [loopMode]);
+
 
   const getStatus = (v, q) => {
     if (q === 0) return v > 0 ? "surplus" : "neutral";
@@ -365,6 +373,7 @@ export default function Dashboard() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button className={`rb ${isTV ? "active" : ""}`} onClick={() => setViewMode(isTV ? "table" : "tv")}>{isTV ? "◧ Table View" : "▦ TV Mode"}</button>
+            <button className={`rb ${loopMode ? "active" : ""}`} onClick={() => setLoopMode((p) => !p)}>⟳ Loop</button>
             <button className="rb" onClick={load} disabled={loading}>{loading ? "Loading…" : "↻ Refresh"}</button>
             <div className="live"><div className="ld" />{time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</div>
           </div>
