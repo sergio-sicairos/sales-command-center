@@ -482,6 +482,7 @@ export default function Dashboard() {
                   const st = getStatus(s.booked, sdrQuota);
                   const bc = attColor(att);
                   const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
+                  const ex = expanded === `sdr-tv-${i}`;
                   return (
                     <div className="tv-card" key={s.name}>
                       <span className="tv-rank">#{i + 1}</span>
@@ -501,9 +502,22 @@ export default function Dashboard() {
                         <span className="tv-att" style={{ color: bc }}>{att}%</span>
                         <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
                       </div>
-                      <div className="tv-footer">
+                      <div className="tv-footer" style={{ justifyContent: "space-between" }}>
                         <StatusPill status={st} compact />
+                        {s.opps?.length > 0 && (
+                          <span onClick={() => setExpanded(ex ? null : `sdr-tv-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
+                        )}
                       </div>
+                      {ex && s.opps?.length > 0 && (
+                        <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
+                          {s.opps.sort((a, b) => (b.points || 0) - (a.points || 0)).map((o, j) => (
+                            <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "70%" }}>{(o.name || "").length > 24 ? o.name.slice(0, 24) + "…" : o.name}</span>
+                              <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmtPts(o.points || 0)} pt</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
