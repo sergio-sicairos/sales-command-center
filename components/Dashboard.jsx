@@ -650,7 +650,7 @@ export default function Dashboard() {
                         <div className="sdr-row row-inner">
                           <div className="name-cell"><span className="rank">{i + 1}</span><Avatar name={s.name} /><div style={{ minWidth: 0 }}><div className="name-primary" style={{ whiteSpace: "nowrap" }}>{s.name}</div><div className="name-sub" style={{ whiteSpace: "nowrap" }}>{fmtPts(s.booked)}/{sdrQuota} target</div></div></div>
                           <div><span className="val">{fmtPts(s.booked)}</span></div>
-                          <div><span className="val-muted">{fmtPts(s.pending)}</span></div>
+                          <div><span className="val-muted">{s.pendingOpps?.length || 0}</span></div>
                           <div><span className="val">{fmtPts(s.qualified)}</span></div>
                           <div><span className="pacing-badge" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)}</span></div>
                           <div><StatusPill status={st} /></div>
