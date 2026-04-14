@@ -502,36 +502,25 @@ export default function Dashboard() {
                         <span className="tv-att" style={{ color: bc }}>{att}%</span>
                         <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
                       </div>
+                      {(s.pendingOpps?.length > 0) && (
+                        <div style={{ fontSize: 11, color: "#94a3b8" }}>
+                          <span style={{ fontWeight: 600, color: "#64748b" }}>{s.pendingOpps.length}</span> pending opp{s.pendingOpps.length !== 1 ? "s" : ""}
+                        </div>
+                      )}
                       <div className="tv-footer" style={{ justifyContent: "space-between" }}>
                         <StatusPill status={st} compact />
                         {s.opps?.length > 0 && (
                           <span onClick={() => setExpanded(ex ? null : `sdr-tv-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
                         )}
                       </div>
-                      {ex && (s.opps?.length > 0 || s.pendingOpps?.length > 0) && (
+                      {ex && s.opps?.length > 0 && (
                         <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
-                          {s.opps?.length > 0 && (
-                            <>
-                              <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", marginBottom: 2 }}>Qualified</div>
-                              {s.opps.sort((a, b) => (b.points || 0) - (a.points || 0)).map((o, j) => (
-                                <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
-                                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "70%" }}>{(o.name || "").length > 24 ? o.name.slice(0, 24) + "…" : o.name}</span>
-                                  <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmtPts(o.points || 0)} pt</span>
-                                </div>
-                              ))}
-                            </>
-                          )}
-                          {s.pendingOpps?.length > 0 && (
-                            <>
-                              <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", marginTop: s.opps?.length > 0 ? 6 : 2, marginBottom: 2 }}>Pending</div>
-                              {s.pendingOpps.map((o, j) => (
-                                <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
-                                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "70%" }}>{(o.name || "").length > 24 ? o.name.slice(0, 24) + "…" : o.name}</span>
-                                  <span style={{ color: "#94a3b8", flexShrink: 0 }}>{o.stage?.length > 12 ? o.stage.slice(0, 12) + "…" : o.stage}</span>
-                                </div>
-                              ))}
-                            </>
-                          )}
+                          {s.opps.sort((a, b) => (b.points || 0) - (a.points || 0)).map((o, j) => (
+                            <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "70%" }}>{(o.name || "").length > 24 ? o.name.slice(0, 24) + "…" : o.name}</span>
+                              <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmtPts(o.points || 0)} pt</span>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
