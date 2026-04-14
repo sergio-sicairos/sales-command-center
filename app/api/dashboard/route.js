@@ -35,7 +35,7 @@ export async function GET() {
 
     const sdrSourceList = SDR_LEAD_SOURCES.map((s) => `'${s}'`).join(",");
     const sdrMeetings = await soql(`
-      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource
+      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, Manual_Override_SDR_Attributable__c
       FROM Opportunity
       WHERE Type = 'New Business'
         AND LeadSource IN (${sdrSourceList})
@@ -86,22 +86,22 @@ export async function GET() {
 
     const sdrMap = {};
     for (const opp of sdrMeetings) {
-      const ownerName = opp.Owner?.Name;
-      if (!ownerName || !rosterSet.has(ownerName)) continue;
-      if (!sdrMap[ownerName]) {
-        sdrMap[ownerName] = { name: ownerName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [] };
+      const sdrName = opp.Manual_Override_SDR_Attributable__c;
+      if (!sdrName) continue;
+      if (!sdrMap[sdrName]) {
+        sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [] };
       }
-      sdrMap[ownerName].booked++;
-      sdrMap[ownerName].opps.push({
+      sdrMap[sdrName].booked++;
+      sdrMap[sdrName].opps.push({
         name: opp.Name,
         stage: opp.StageName,
         created: opp.CreatedDate?.slice(0, 10),
       });
       const stage = opp.StageName || "";
-      if (stage.includes("Open")) sdrMap[ownerName].pending++;
+      if (stage.includes("Open")) sdrMap[sdrName].pending++;
       else if (stage.includes("Qualified") || stage.includes("Interested") || stage.includes("POC") || stage.includes("Negotiation"))
-        sdrMap[ownerName].qualified++;
-      else if (stage.includes("Lost")) sdrMap[ownerName].lost++;
+        sdrMap[sdrName].qualified++;
+      else if (stage.includes("Lost")) sdrMap[sdrName].lost++;
     }
 
     const aeData = Object.values(aeMap).sort((a, b) => b.closed - a.closed);
