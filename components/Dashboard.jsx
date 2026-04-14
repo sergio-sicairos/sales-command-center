@@ -185,7 +185,7 @@ export default function Dashboard() {
   useEffect(() => {
     const compute = () => {
       if (viewMode !== "tv") { setTvScale(1); return; }
-      setTvScale(Math.min(window.innerWidth / 1440, window.innerHeight / 940));
+      setTvScale(Math.min(window.innerWidth / 1440, window.innerHeight / 1020));
     };
     compute();
     window.addEventListener("resize", compute);
@@ -254,7 +254,7 @@ export default function Dashboard() {
   const isTV = viewMode === "tv";
 
   return (
-    <div style={isTV ? { position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", overflow: "hidden", display: "flex", justifyContent: "center", background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif" } : { minHeight: "100vh", background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+    <div style={isTV ? { position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", overflowY: "auto", overflowX: "hidden", display: "flex", justifyContent: "center", background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif" } : { minHeight: "100vh", background: "#f8fafc", color: "#1e293b", fontFamily: "'DM Sans', system-ui, sans-serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -356,7 +356,7 @@ export default function Dashboard() {
         @media (max-width: 800px) { .kpi-row { grid-template-columns: 1fr 1fr; } .dc { padding: 20px 16px; } .tv-grid { grid-template-columns: repeat(2, 1fr); } }
       `}</style>
 
-      <div className="dc" style={isTV ? { width: "1440px", height: "940px", transform: `scale(${tvScale})`, transformOrigin: "top center", flexShrink: 0, overflow: "hidden" } : {}}>
+      <div className="dc" style={isTV ? { width: "1440px", minHeight: "1020px", transform: `scale(${tvScale})`, transformOrigin: "top center", flexShrink: 0 } : {}}>
         {/* HEADER */}
         <div className="hdr">
           <div>
