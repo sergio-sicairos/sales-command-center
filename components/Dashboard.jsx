@@ -226,6 +226,7 @@ export default function Dashboard() {
   const aeData = data?.aeData || [];
   const sdrData = data?.sdrData || [];
   const SDR_QUOTA = data?.config?.SDR_MEETING_QUOTA || 10;
+  const SDR_TEAM_GOAL = data?.config?.SDR_TEAM_QUOTA || 105;
   const TEAM_GOAL = data?.config?.TEAM_GOAL || 1900000;
   const meta = data?.meta || {};
   const tClosed = aeData.reduce((s, a) => s + a.closed, 0);
@@ -242,6 +243,13 @@ export default function Dashboard() {
   const tBookings = sdrData.reduce((s, a) => s + a.booked, 0);
   const tPending = sdrData.reduce((s, a) => s + a.pending, 0);
   const tQualified = sdrData.reduce((s, a) => s + a.qualified, 0);
+  const sdrTeamAtt = SDR_TEAM_GOAL > 0 ? Math.round((tBookings / SDR_TEAM_GOAL) * 100) : 0;
+  const sdrTeamGap = Math.max(0, SDR_TEAM_GOAL - tBookings);
+  const sdrTeamPaceAmt = SDR_TEAM_GOAL * pace;
+  const sdrTeamPaceDiff = parseFloat((tBookings - sdrTeamPaceAmt).toFixed(1));
+  const sdrTeamBarColor = tBookings >= SDR_TEAM_GOAL ? "#16a34a" : tBookings / SDR_TEAM_GOAL >= pace ? "#3b82f6" : tBookings / SDR_TEAM_GOAL >= pace * 0.8 ? "#eab308" : "#dc2626";
+  const sdrQuotaHitters = sdrData.filter((s) => s.quota > 0 && s.booked >= s.quota).length;
+  const sdrWithQuota = sdrData.filter((s) => s.quota > 0).length;
 
   const isTV = viewMode === "tv";
 
@@ -364,7 +372,7 @@ export default function Dashboard() {
 
 
         {/* ===== TEAM GOAL BAR ===== */}
-        {!loading && !error && data && !(isTV && tab === "sdr") && (
+        {!loading && !error && data && tab === "ae" && (
           <div style={{ background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
@@ -385,7 +393,6 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            {/* Progress bar with pace marker */}
             <div style={{ position: "relative", width: "100%", height: 10, borderRadius: 5, background: "#ede9e3", marginBottom: 14 }}>
               <div style={{ width: `${Math.min(teamAtt, 100)}%`, height: "100%", borderRadius: 5, background: teamBarColor, transition: "width 0.8s ease" }} />
               <div style={{ position: "absolute", top: -4, left: `${Math.min(pace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 18, background: "#cbd5e1", borderRadius: 1 }} title="Month pace" />
@@ -395,6 +402,42 @@ export default function Dashboard() {
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Pace </span><span style={{ fontSize: 13, fontWeight: 600, color: teamPaceDiff >= 0 ? "#16a34a" : "#dc2626" }}>{teamPaceDiff >= 0 ? `+${fmtF(teamPaceDiff)}` : `-${fmtF(Math.abs(teamPaceDiff))}`}</span></div>
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtF(teamPaceAmt)}</span></div>
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{qHitters}/{quotaAEs} reps</span></div>
+              </div>
+              <div style={{ fontSize: 11, color: "#94a3b8" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
+            </div>
+          </div>
+        )}
+
+        {!loading && !error && data && tab === "sdr" && (
+          <div style={{ background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>Monthly SDR Team Goal — {cm} {cy}</div>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+                  <span style={{ fontSize: isTV ? 26 : 36, fontWeight: 700, color: "#0f172a", letterSpacing: -1, fontFamily: "'DM Sans',sans-serif" }}>{fmtPts(tBookings)}</span>
+                  <span style={{ fontSize: isTV ? 13 : 17, color: "#94a3b8", fontWeight: 500 }}>of {SDR_TEAM_GOAL} meetings</span>
+                </div>
+              </div>
+              <div style={{ display: "flex", gap: isTV ? 20 : 32, alignItems: "flex-start" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: sdrTeamBarColor, letterSpacing: -0.5 }}>{sdrTeamAtt}%</div>
+                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Attainment</div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: sdrTeamGap === 0 ? "#16a34a" : "#dc2626", letterSpacing: -0.5 }}>{sdrTeamGap === 0 ? "Done!" : `-${fmtPts(sdrTeamGap)}`}</div>
+                  <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Gap</div>
+                </div>
+              </div>
+            </div>
+            <div style={{ position: "relative", width: "100%", height: 10, borderRadius: 5, background: "#ede9e3", marginBottom: 14 }}>
+              <div style={{ width: `${Math.min(sdrTeamAtt, 100)}%`, height: "100%", borderRadius: 5, background: sdrTeamBarColor, transition: "width 0.8s ease" }} />
+              <div style={{ position: "absolute", top: -4, left: `${Math.min(pace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 18, background: "#cbd5e1", borderRadius: 1 }} title="Month pace" />
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div style={{ display: "flex", gap: 24 }}>
+                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Pace </span><span style={{ fontSize: 13, fontWeight: 600, color: sdrTeamPaceDiff >= 0 ? "#16a34a" : "#dc2626" }}>{sdrTeamPaceDiff >= 0 ? `+${fmtPts(sdrTeamPaceDiff)}` : fmtPts(sdrTeamPaceDiff)}</span></div>
+                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtPts(parseFloat(sdrTeamPaceAmt.toFixed(1)))}</span></div>
+                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{sdrQuotaHitters}/{sdrWithQuota} SDRs</span></div>
               </div>
               <div style={{ fontSize: 11, color: "#94a3b8" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
             </div>
