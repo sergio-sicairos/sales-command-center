@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 
 const fmt = (n) => (n >= 1e6 ? `$${(n / 1e6).toFixed(1)}M` : n >= 1000 ? `$${Math.round(n / 1000)}K` : `$${Math.round(n)}`);
 const fmtF = (n) => `$${Math.round(n).toLocaleString()}`;
+const fmtPts = (n) => Number.isInteger(n) ? String(n) : parseFloat(n.toFixed(1)).toString();
 const ini = (n) => n.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
 
 const AVATARS = {
@@ -480,7 +481,7 @@ export default function Dashboard() {
                   const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
                   const st = getStatus(s.booked, sdrQuota);
                   const bc = attColor(att);
-                  const diff = s.booked - Math.round(sdrQuota * pace);
+                  const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
                   return (
                     <div className="tv-card" key={s.name}>
                       <span className="tv-rank">#{i + 1}</span>
@@ -488,17 +489,17 @@ export default function Dashboard() {
                         <Avatar name={s.name} size={56} />
                         <div style={{ overflow: "hidden" }}>
                           <div className="tv-name">{s.name}</div>
-                          <div className="tv-deals">{s.booked}/{sdrQuota} target</div>
+                          <div className="tv-deals">{fmtPts(s.booked)}/{sdrQuota} target</div>
                         </div>
                       </div>
                       <div className="tv-arr">
-                        <span className="tv-arr-val">{s.booked}</span>
+                        <span className="tv-arr-val">{fmtPts(s.booked)}</span>
                         <span className="tv-arr-of">of {sdrQuota} mtgs</span>
                       </div>
                       <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={5} />
                       <div className="tv-stats">
                         <span className="tv-att" style={{ color: bc }}>{att}%</span>
-                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${diff}` : diff} vs pace</span>
+                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
                       </div>
                       <div className="tv-footer">
                         <StatusPill status={st} compact />
@@ -579,18 +580,17 @@ export default function Dashboard() {
                   const sdrQuota = s.quota || SDR_QUOTA;
                   const att = Math.round((s.booked / sdrQuota) * 100);
                   const st = getStatus(s.booked, sdrQuota);
-                  const expected = Math.round(sdrQuota * pace);
-                  const diff = s.booked - expected;
+                  const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
                   const ex = expanded === `sdr-${i}`;
                   return (
                     <div key={s.name}>
                       <div className="row-wrap" onClick={() => setExpanded(ex ? null : `sdr-${i}`)}>
                         <div className="sdr-row row-inner">
-                          <div className="name-cell"><span className="rank">{i + 1}</span><Avatar name={s.name} /><div><div className="name-primary">{s.name}</div><div className="name-sub">{s.booked}/{sdrQuota} target</div></div></div>
-                          <div><span className="val">{s.booked}</span></div>
-                          <div><span className="val-muted">{s.pending}</span></div>
-                          <div><span className="val">{s.qualified}</span></div>
-                          <div><span className="pacing-badge" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${diff}` : diff}</span></div>
+                          <div className="name-cell"><span className="rank">{i + 1}</span><Avatar name={s.name} /><div><div className="name-primary">{s.name}</div><div className="name-sub">{fmtPts(s.booked)}/{sdrQuota} target</div></div></div>
+                          <div><span className="val">{fmtPts(s.booked)}</span></div>
+                          <div><span className="val-muted">{fmtPts(s.pending)}</span></div>
+                          <div><span className="val">{fmtPts(s.qualified)}</span></div>
+                          <div><span className="pacing-badge" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)}</span></div>
                           <div><StatusPill status={st} /></div>
                         </div>
                       </div>
@@ -598,7 +598,7 @@ export default function Dashboard() {
                         <div className="expand-panel">
                           {s.opps.sort((a, b) => (a.stage || "").localeCompare(b.stage || "")).map((o, j) => {
                             const sc = (o.stage || "").includes("Open") ? "#3b82f6" : (o.stage || "").includes("Qualified") || (o.stage || "").includes("Interested") ? "#16a34a" : (o.stage || "").includes("Lost") ? "#dc2626" : "#94a3b8";
-                            return <span key={j} className="deal-chip"><span className="stage-dot" style={{ background: sc }} />{(o.name || "").length > 26 ? o.name.slice(0, 26) + "…" : o.name}</span>;
+                            return <span key={j} className="deal-chip"><span className="stage-dot" style={{ background: sc }} />{(o.name || "").length > 26 ? o.name.slice(0, 26) + "…" : o.name}{o.points != null && o.points !== 1 ? <span style={{ color: "#94a3b8", marginLeft: 4 }}>({fmtPts(o.points)}pt)</span> : null}</span>;
                           })}
                         </div>
                       )}

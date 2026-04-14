@@ -1,6 +1,6 @@
 // app/api/dashboard/route.js
 import { soql } from "@/lib/salesforce";
-import { AE_QUOTAS, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_QUOTAS, SDR_ROSTER, SDR_LEAD_SOURCES, TEAM_GOAL } from "@/lib/constants";
+import { AE_QUOTAS, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_QUOTAS, SDR_ROSTER, TEAM_GOAL } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -33,12 +33,11 @@ export async function GET() {
       ORDER BY Opportunity_ARR__c DESC
     `);
 
-    const sdrSourceList = SDR_LEAD_SOURCES.map((s) => `'${s}'`).join(",");
     const sdrMeetings = await soql(`
-      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, SDR_Qualified__c, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
+      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, SDR_Points__c, SDR_Meeting_Qualified_by_AE__c, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
       FROM Opportunity
       WHERE Type = 'New Business'
-        AND LeadSource IN (${sdrSourceList})
+        AND SDR_Meeting_Qualified_by_AE__c = true
         AND CreatedDate >= ${monthStart}T00:00:00Z
         AND CreatedDate < ${nextMonth}T00:00:00Z
       ORDER BY CreatedDate DESC
@@ -97,16 +96,17 @@ export async function GET() {
         const quota = SDR_QUOTAS[sdrName] ?? SDR_MEETING_QUOTA;
         sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], quota };
       }
-      sdrMap[sdrName].booked++;
+      const points = opp.SDR_Points__c || 0;
+      sdrMap[sdrName].booked += points;
       sdrMap[sdrName].opps.push({
         name: opp.Name,
         stage: opp.StageName,
         created: opp.CreatedDate?.slice(0, 10),
+        points,
       });
       const stage = opp.StageName || "";
-      if (opp.SDR_Qualified__c) sdrMap[sdrName].qualified++;
-      else if (stage.includes("Lost")) sdrMap[sdrName].lost++;
-      else sdrMap[sdrName].pending++;
+      if (stage.includes("Closed Lost") || stage.includes("Closed Won")) sdrMap[sdrName].lost += points;
+      else sdrMap[sdrName].pending += points;
     }
 
     const aeData = Object.values(aeMap).sort((a, b) => b.closed - a.closed);
