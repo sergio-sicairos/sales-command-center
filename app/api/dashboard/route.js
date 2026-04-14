@@ -1,6 +1,6 @@
 // app/api/dashboard/route.js
 import { soql } from "@/lib/salesforce";
-import { AE_QUOTAS, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_LEAD_SOURCES, TEAM_GOAL } from "@/lib/constants";
+import { AE_QUOTAS, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_QUOTAS, SDR_ROSTER, SDR_LEAD_SOURCES, TEAM_GOAL } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -85,11 +85,17 @@ export async function GET() {
     }
 
     const sdrMap = {};
+    for (const name of SDR_ROSTER) {
+      const quota = SDR_QUOTAS[name] ?? SDR_MEETING_QUOTA;
+      sdrMap[name] = { name, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], quota };
+    }
+
     for (const opp of sdrMeetings) {
       const sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
       if (!sdrName) continue;
       if (!sdrMap[sdrName]) {
-        sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [] };
+        const quota = SDR_QUOTAS[sdrName] ?? SDR_MEETING_QUOTA;
+        sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], quota };
       }
       sdrMap[sdrName].booked++;
       sdrMap[sdrName].opps.push({

@@ -32,6 +32,9 @@ const AVATARS = {
   "Ross DeRose": "/avatars/ross-derose.jpg",
   "Luke Singer": "/avatars/luke-singer.jpg",
   "Matthew Hafizi": "/avatars/matthew-hafizi.jpg",
+  "Jesse Mon": "/avatars/jesse-mon.jpg",
+  "London Vidaurri": "/avatars/london-vidaurri.jpg",
+  "Hemel Madaan": "/avatars/hemel-madaan.jpg",
 };
 
 const QUOTES = [
@@ -221,7 +224,7 @@ export default function Dashboard() {
 
   const aeData = data?.aeData || [];
   const sdrData = data?.sdrData || [];
-  const SDR_QUOTA = data?.config?.SDR_MEETING_QUOTA || 20;
+  const SDR_QUOTA = data?.config?.SDR_MEETING_QUOTA || 10;
   const TEAM_GOAL = data?.config?.TEAM_GOAL || 1900000;
   const meta = data?.meta || {};
   const tClosed = aeData.reduce((s, a) => s + a.closed, 0);
@@ -517,16 +520,17 @@ export default function Dashboard() {
                   <div className="col-hdr">Assigned AE</div><div className="col-hdr">Booked</div><div className="col-hdr">Pending</div><div className="col-hdr">Qualified</div><div className="col-hdr">Pacing</div><div className="col-hdr">Status</div>
                 </div>
                 {sdrData.map((s, i) => {
-                  const att = Math.round((s.booked / SDR_QUOTA) * 100);
-                  const st = getStatus(s.booked, SDR_QUOTA);
-                  const expected = Math.round(SDR_QUOTA * pace);
+                  const sdrQuota = s.quota || SDR_QUOTA;
+                  const att = Math.round((s.booked / sdrQuota) * 100);
+                  const st = getStatus(s.booked, sdrQuota);
+                  const expected = Math.round(sdrQuota * pace);
                   const diff = s.booked - expected;
                   const ex = expanded === `sdr-${i}`;
                   return (
                     <div key={s.name}>
                       <div className="row-wrap" onClick={() => setExpanded(ex ? null : `sdr-${i}`)}>
                         <div className="sdr-row row-inner">
-                          <div className="name-cell"><span className="rank">{i + 1}</span><Avatar name={s.name} /><div><div className="name-primary">{s.name}</div><div className="name-sub">{s.booked}/{SDR_QUOTA} target</div></div></div>
+                          <div className="name-cell"><span className="rank">{i + 1}</span><Avatar name={s.name} /><div><div className="name-primary">{s.name}</div><div className="name-sub">{s.booked}/{sdrQuota} target</div></div></div>
                           <div><span className="val">{s.booked}</span></div>
                           <div><span className="val-muted">{s.pending}</span></div>
                           <div><span className="val">{s.qualified}</span></div>
@@ -545,7 +549,7 @@ export default function Dashboard() {
                     </div>
                   );
                 })}
-                <div className="footer"><span>Month: Day {dom}/{dim} · SDR Quota: {SDR_QUOTA}/mo</span><div style={{ display: "flex", alignItems: "center", gap: 10 }}><div className="foot-bar"><div className="foot-fill" style={{ width: `${Math.round(pace * 100)}%` }} /></div><span>{Math.round(pace * 100)}%</span></div></div>
+                <div className="footer"><span>Month: Day {dom}/{dim} · SDR Quota: {SDR_QUOTA || 10}/mo</span><div style={{ display: "flex", alignItems: "center", gap: 10 }}><div className="foot-bar"><div className="foot-fill" style={{ width: `${Math.round(pace * 100)}%` }} /></div><span>{Math.round(pace * 100)}%</span></div></div>
               </div>
             )}
           </>
