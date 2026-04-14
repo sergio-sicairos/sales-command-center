@@ -34,7 +34,7 @@ const AVATARS = {
   "Matthew Hafizi": "/avatars/matthew-hafizi.jpg",
   "Jesse Mon": "/avatars/jesse-mon.jpg",
   "London Vidaurri": "/avatars/london-vidaurri.jpg",
-  "Hemel Madaan": "/avatars/hemel-madaan.jpg",
+  "Hemal Madaan": "/avatars/hemal-madaan.jpg",
 };
 
 const QUOTES = [
