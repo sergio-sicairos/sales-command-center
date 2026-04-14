@@ -286,12 +286,12 @@ export default function Dashboard() {
 
         .sdr-hdr, .sdr-row { display: table; width: 100%; table-layout: fixed; padding: 0; }
         .sdr-hdr > *, .sdr-row > * { display: table-cell; vertical-align: middle; padding: 12px 16px; }
-        .sdr-hdr > *:first-child, .sdr-row > *:first-child { padding-left: 28px; width: 24%; }
-        .sdr-hdr > *:nth-child(2), .sdr-row > *:nth-child(2) { width: 10%; text-align: right; }
-        .sdr-hdr > *:nth-child(3), .sdr-row > *:nth-child(3) { width: 10%; text-align: right; }
+        .sdr-hdr > *:first-child, .sdr-row > *:first-child { padding-left: 28px; width: 28%; }
+        .sdr-hdr > *:nth-child(2), .sdr-row > *:nth-child(2) { width: 12%; text-align: right; }
+        .sdr-hdr > *:nth-child(3), .sdr-row > *:nth-child(3) { width: 12%; text-align: right; }
         .sdr-hdr > *:nth-child(4), .sdr-row > *:nth-child(4) { width: 12%; text-align: right; }
-        .sdr-hdr > *:nth-child(5), .sdr-row > *:nth-child(5) { width: 10%; text-align: right; }
-        .sdr-hdr > *:last-child, .sdr-row > *:last-child { width: 18%; text-align: right; padding-right: 28px; }
+        .sdr-hdr > *:nth-child(5), .sdr-row > *:nth-child(5) { width: 12%; text-align: right; }
+        .sdr-hdr > *:last-child, .sdr-row > *:last-child { width: 24%; text-align: right; padding-right: 28px; }
 
         .col-hdr { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8; border-bottom: 1px solid #f1f5f9; }
         .row-wrap { border-bottom: 1px solid #f8fafc; cursor: pointer; transition: background 0.1s; }
