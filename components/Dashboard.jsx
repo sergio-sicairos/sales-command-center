@@ -351,7 +351,7 @@ export default function Dashboard() {
         {/* HEADER */}
         <div className="hdr">
           <div>
-            <h1>AE Performance — {cm} {cy}</h1>
+            <h1>{isTV && tab === "sdr" ? "SDR Activity" : "AE Performance"} — {cm} {cy}</h1>
             <div className="sub">Day {dom} of {dim} · {Math.round(pace * 100)}% through month</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -363,7 +363,7 @@ export default function Dashboard() {
 
 
         {/* ===== TEAM GOAL BAR ===== */}
-        {!loading && !error && data && (
+        {!loading && !error && data && !(isTV && tab === "sdr") && (
           <div style={{ background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
@@ -405,66 +405,122 @@ export default function Dashboard() {
         ) : error ? (
           <div className="card"><div className="loader"><div style={{ color: "#dc2626", fontSize: 13 }}>Error: {error}</div><button className="rb" onClick={load} style={{ marginTop: 12 }}>Retry</button></div></div>
         ) : isTV ? (
-          /* ============ TV CARD GRID ============ */
-          <div className="tv-grid">
-            {aeData.map((ae, i) => {
-              const q = ae.quota || 0;
-              const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
-              const st = getStatus(ae.closed, q);
-              const bc = attColor(att);
-              const gapVal = ae.gap || 0;
-              const ex = expanded === `ae-${i}`;
-              return (
-                <div className="tv-card" key={ae.name}>
-                  <span className="tv-rank">#{i + 1}</span>
-                  <div className="tv-top">
-                    <Avatar name={ae.name} size={56} />
-                    <div style={{ overflow: "hidden" }}>
-                      <div className="tv-name">{ae.name}</div>
-                      <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
-                    </div>
-                  </div>
-                  <div className="tv-arr">
-                    <span className="tv-arr-val">{fmtF(Math.round(ae.closed))}</span>
-                    <span className="tv-arr-of">of {q > 0 ? fmt(q) : "$0"}</span>
-                  </div>
-                  <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={5} />
-                  <div className="tv-stats">
-                    <span className="tv-att" style={{ color: bc }}>{att}%</span>
-                    <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#dc2626" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
-                  </div>
-                  <div className="tv-footer" style={{ justifyContent: "space-between" }}>
-                    <StatusPill status={st} compact />
-                    {ae.deals?.length > 0 && (
-                      <span onClick={() => setExpanded(ex ? null : `ae-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
-                    )}
-                  </div>
-                  {ex && ae.deals?.length > 0 && (
-                    <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
-                      {ae.deals.sort((a, b) => b.arr - a.arr).map((d, j) => (
-                        <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
-                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
-                          <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+          /* ============ TV MODE ============ */
+          <>
+            <div className="tabs" style={{ marginBottom: 16 }}>
+              <button className={`tb ${tab === "ae" ? "on" : ""}`} onClick={() => { setTab("ae"); setExpanded(null); }}>Account Executives</button>
+              <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDR Activity</button>
+            </div>
+            {tab === "ae" ? (
+              /* ---- AE TV GRID ---- */
+              <div className="tv-grid">
+                {aeData.map((ae, i) => {
+                  const q = ae.quota || 0;
+                  const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
+                  const st = getStatus(ae.closed, q);
+                  const bc = attColor(att);
+                  const gapVal = ae.gap || 0;
+                  const ex = expanded === `ae-${i}`;
+                  return (
+                    <div className="tv-card" key={ae.name}>
+                      <span className="tv-rank">#{i + 1}</span>
+                      <div className="tv-top">
+                        <Avatar name={ae.name} size={56} />
+                        <div style={{ overflow: "hidden" }}>
+                          <div className="tv-name">{ae.name}</div>
+                          <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
                         </div>
-                      ))}
+                      </div>
+                      <div className="tv-arr">
+                        <span className="tv-arr-val">{fmtF(Math.round(ae.closed))}</span>
+                        <span className="tv-arr-of">of {q > 0 ? fmt(q) : "$0"}</span>
+                      </div>
+                      <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={5} />
+                      <div className="tv-stats">
+                        <span className="tv-att" style={{ color: bc }}>{att}%</span>
+                        <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#dc2626" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
+                      </div>
+                      <div className="tv-footer" style={{ justifyContent: "space-between" }}>
+                        <StatusPill status={st} compact />
+                        {ae.deals?.length > 0 && (
+                          <span onClick={() => setExpanded(ex ? null : `ae-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
+                        )}
+                      </div>
+                      {ex && ae.deals?.length > 0 && (
+                        <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
+                          {ae.deals.sort((a, b) => b.arr - a.arr).map((d, j) => (
+                            <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
+                              <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              );
-            })}
-            {/* Daily Quote Card */}
-            {(() => {
-              const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
-              return (
-                <div className="tv-summary" style={{ justifyContent: "center" }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569" }}>Daily Motivation</div>
-                  <div style={{ fontSize: 40, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
-                  <div style={{ fontSize: 16, color: "#cbd5e1", lineHeight: 1.7, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
-                  <div style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>— {q.author}</div>
-                </div>
-              );
-            })()}
-          </div>
+                  );
+                })}
+                {/* Daily Quote Card */}
+                {(() => {
+                  const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+                  return (
+                    <div className="tv-summary" style={{ justifyContent: "center" }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569" }}>Daily Motivation</div>
+                      <div style={{ fontSize: 40, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
+                      <div style={{ fontSize: 16, color: "#cbd5e1", lineHeight: 1.7, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
+                      <div style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>— {q.author}</div>
+                    </div>
+                  );
+                })()}
+              </div>
+            ) : (
+              /* ---- SDR TV GRID ---- */
+              <div className="tv-grid">
+                {sdrData.map((s, i) => {
+                  const sdrQuota = s.quota || SDR_QUOTA;
+                  const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
+                  const st = getStatus(s.booked, sdrQuota);
+                  const bc = attColor(att);
+                  const diff = s.booked - Math.round(sdrQuota * pace);
+                  return (
+                    <div className="tv-card" key={s.name}>
+                      <span className="tv-rank">#{i + 1}</span>
+                      <div className="tv-top">
+                        <Avatar name={s.name} size={56} />
+                        <div style={{ overflow: "hidden" }}>
+                          <div className="tv-name">{s.name}</div>
+                          <div className="tv-deals">{s.booked}/{sdrQuota} target</div>
+                        </div>
+                      </div>
+                      <div className="tv-arr">
+                        <span className="tv-arr-val">{s.booked}</span>
+                        <span className="tv-arr-of">of {sdrQuota} mtgs</span>
+                      </div>
+                      <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={5} />
+                      <div className="tv-stats">
+                        <span className="tv-att" style={{ color: bc }}>{att}%</span>
+                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${diff}` : diff} vs pace</span>
+                      </div>
+                      <div className="tv-footer">
+                        <StatusPill status={st} compact />
+                      </div>
+                    </div>
+                  );
+                })}
+                {/* Daily Quote Card */}
+                {(() => {
+                  const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+                  return (
+                    <div className="tv-summary" style={{ justifyContent: "center" }}>
+                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569" }}>Daily Motivation</div>
+                      <div style={{ fontSize: 40, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
+                      <div style={{ fontSize: 16, color: "#cbd5e1", lineHeight: 1.7, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
+                      <div style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>— {q.author}</div>
+                    </div>
+                  );
+                })()}
+              </div>
+            )}
+          </>
         ) : (
           /* ============ TABLE VIEW ============ */
           <>
