@@ -34,13 +34,13 @@ export async function GET() {
     `);
 
     const sdrMeetings = await soql(`
-      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, SDR_Points__c, SDR_Meeting_Qualified_by_AE__c, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
+      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, SDR_Points__c, SDR_Meeting_Qualified_by_AE__c, SDR_Meeting_Qualified_Date__c, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
       FROM Opportunity
       WHERE Type = 'New Business'
         AND SDR_Meeting_Qualified_by_AE__c = true
-        AND CreatedDate >= ${monthStart}T00:00:00Z
-        AND CreatedDate < ${nextMonth}T00:00:00Z
-      ORDER BY CreatedDate DESC
+        AND SDR_Meeting_Qualified_Date__c >= ${monthStart}
+        AND SDR_Meeting_Qualified_Date__c < ${nextMonth}
+      ORDER BY SDR_Meeting_Qualified_Date__c DESC
     `);
 
     const rosterNames = Object.keys(AE_QUOTAS);
