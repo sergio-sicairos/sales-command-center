@@ -219,7 +219,7 @@ export default function Dashboard() {
   const attColor = (p) => {
     if (p >= 75) return "#16a34a";
     if (p >= 50) return "#facc15";
-    if (p >= 25) return "#ea580c";
+    if (p >= 25) return "#f97316";
     return "#dc2626";
   };
 
