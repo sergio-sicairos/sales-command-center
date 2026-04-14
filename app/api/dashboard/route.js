@@ -35,7 +35,7 @@ export async function GET() {
 
     const sdrSourceList = SDR_LEAD_SOURCES.map((s) => `'${s}'`).join(",");
     const sdrMeetings = await soql(`
-      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
+      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, SDR_Qualified__c, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
       FROM Opportunity
       WHERE Type = 'New Business'
         AND LeadSource IN (${sdrSourceList})
@@ -104,10 +104,9 @@ export async function GET() {
         created: opp.CreatedDate?.slice(0, 10),
       });
       const stage = opp.StageName || "";
-      if (stage.includes("Open")) sdrMap[sdrName].pending++;
-      else if (stage.includes("Qualified") || stage.includes("Interested") || stage.includes("POC") || stage.includes("Negotiation"))
-        sdrMap[sdrName].qualified++;
+      if (opp.SDR_Qualified__c) sdrMap[sdrName].qualified++;
       else if (stage.includes("Lost")) sdrMap[sdrName].lost++;
+      else sdrMap[sdrName].pending++;
     }
 
     const aeData = Object.values(aeMap).sort((a, b) => b.closed - a.closed);
