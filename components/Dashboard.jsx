@@ -29,7 +29,7 @@ const AVATARS = {
   "Colby Keces": "/avatars/colby-keces.jpg",
   "Jack Dudzik": "/avatars/jack-dudzik.jpg",
   "Austin Kuo": "/avatars/austin-kuo.jpg",
-  "Ross Derose": "/avatars/ross-derose.jpg",
+  "Ross DeRose": "/avatars/ross-derose.jpg",
   "Luke Singer": "/avatars/luke-singer.jpg",
   "Matthew Hafizi": "/avatars/matthew-hafizi.jpg",
 };
