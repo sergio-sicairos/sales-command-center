@@ -33,6 +33,16 @@ export async function GET() {
       ORDER BY Opportunity_ARR__c DESC
     `);
 
+    const sdrPending = await soql(`
+      SELECT Owner.Name, Name, StageName, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
+      FROM Opportunity
+      WHERE Type = 'New Business'
+        AND StageName NOT IN ('Closed Won', 'Closed Lost')
+        AND SDR_Meeting_Qualified_by_AE__c != true
+        AND Manual_Override_SDR_Attributable__c != null
+      ORDER BY CreatedDate DESC
+    `);
+
     const sdrMeetings = await soql(`
       SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, SDR_Points__c, SDR_Meeting_Qualified_by_AE__c, SDR_Meeting_Qualified_Date__c, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
       FROM Opportunity
@@ -86,7 +96,7 @@ export async function GET() {
     const sdrMap = {};
     for (const name of SDR_ROSTER) {
       const quota = SDR_QUOTAS[name] ?? SDR_MEETING_QUOTA;
-      sdrMap[name] = { name, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], quota };
+      sdrMap[name] = { name, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], pendingOpps: [], quota };
     }
 
     for (const opp of sdrMeetings) {
@@ -94,7 +104,7 @@ export async function GET() {
       if (!sdrName) continue;
       if (!sdrMap[sdrName]) {
         const quota = SDR_QUOTAS[sdrName] ?? SDR_MEETING_QUOTA;
-        sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], quota };
+        sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], pendingOpps: [], quota };
       }
       const points = opp.SDR_Points__c || 0;
       sdrMap[sdrName].booked += points;
@@ -107,6 +117,12 @@ export async function GET() {
       const stage = opp.StageName || "";
       if (stage.includes("Closed Lost") || stage.includes("Closed Won")) sdrMap[sdrName].lost += points;
       else sdrMap[sdrName].pending += points;
+    }
+
+    for (const opp of sdrPending) {
+      const sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
+      if (!sdrName || !sdrMap[sdrName]) continue;
+      sdrMap[sdrName].pendingOpps.push({ name: opp.Name, stage: opp.StageName });
     }
 
     const aeData = Object.values(aeMap).sort((a, b) => b.closed - a.closed);
