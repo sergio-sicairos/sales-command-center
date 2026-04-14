@@ -360,7 +360,7 @@ export default function Dashboard() {
         {/* HEADER */}
         <div className="hdr">
           <div>
-            <h1>{isTV && tab === "sdr" ? "SDR Activity" : "AE Performance"} — {cm} {cy}</h1>
+            <h1>{tab === "sdr" ? "SDRs" : "AE Performance"} — {cm} {cy}</h1>
             <div className="sub">Day {dom} of {dim} · {Math.round(pace * 100)}% through month</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -453,7 +453,7 @@ export default function Dashboard() {
           <>
             <div className="tabs" style={{ marginBottom: 16 }}>
               <button className={`tb ${tab === "ae" ? "on" : ""}`} onClick={() => { setTab("ae"); setExpanded(null); }}>Account Executives</button>
-              <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDR Activity</button>
+              <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDRs</button>
             </div>
             {tab === "ae" ? (
               /* ---- AE TV GRID ---- */
@@ -589,7 +589,7 @@ export default function Dashboard() {
           <>
             <div className="tabs">
               <button className={`tb ${tab === "ae" ? "on" : ""}`} onClick={() => { setTab("ae"); setExpanded(null); }}>Account Executives</button>
-              <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDR Activity</button>
+              <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDRs</button>
             </div>
 
             {tab === "ae" ? (
