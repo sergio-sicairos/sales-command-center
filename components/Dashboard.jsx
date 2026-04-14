@@ -360,7 +360,7 @@ export default function Dashboard() {
         {/* HEADER */}
         <div className="hdr">
           <div>
-            <h1>{tab === "sdr" ? "SDRs" : "AE Performance"} — {cm} {cy}</h1>
+            <h1>{tab === "sdr" ? "SDR Performance" : "AE Performance"} — {cm} {cy}</h1>
             <div className="sub">Day {dom} of {dim} · {Math.round(pace * 100)}% through month</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
