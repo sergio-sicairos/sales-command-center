@@ -35,7 +35,7 @@ export async function GET() {
 
     const sdrSourceList = SDR_LEAD_SOURCES.map((s) => `'${s}'`).join(",");
     const sdrMeetings = await soql(`
-      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, Manual_Override_SDR_Attributable__c
+      SELECT Owner.Name, Name, StageName, CreatedDate, LeadSource, Manual_Override_SDR_Attributable__c, Manual_Override_SDR_Attributable__r.Name
       FROM Opportunity
       WHERE Type = 'New Business'
         AND LeadSource IN (${sdrSourceList})
@@ -86,7 +86,7 @@ export async function GET() {
 
     const sdrMap = {};
     for (const opp of sdrMeetings) {
-      const sdrName = opp.Manual_Override_SDR_Attributable__c;
+      const sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
       if (!sdrName) continue;
       if (!sdrMap[sdrName]) {
         sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [] };
