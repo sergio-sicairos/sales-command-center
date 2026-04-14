@@ -218,7 +218,7 @@ export default function Dashboard() {
 
   const attColor = (p) => {
     if (p >= 75) return "#16a34a";
-    if (p >= 50) return "#eab308";
+    if (p >= 50) return "#facc15";
     if (p >= 25) return "#ea580c";
     return "#dc2626";
   };
@@ -239,7 +239,7 @@ export default function Dashboard() {
   const teamGap = Math.max(0, TEAM_GOAL - tClosed);
   const teamPaceAmt = Math.round(TEAM_GOAL * pace);
   const teamPaceDiff = tClosed - teamPaceAmt;
-  const teamBarColor = tClosed >= TEAM_GOAL ? "#16a34a" : tClosed / TEAM_GOAL >= pace ? "#3b82f6" : tClosed / TEAM_GOAL >= pace * 0.8 ? "#eab308" : "#dc2626";
+  const teamBarColor = tClosed >= TEAM_GOAL ? "#16a34a" : tClosed / TEAM_GOAL >= pace ? "#3b82f6" : tClosed / TEAM_GOAL >= pace * 0.8 ? "#facc15" : "#dc2626";
   const tBookings = sdrData.reduce((s, a) => s + a.booked, 0);
   const tPending = sdrData.reduce((s, a) => s + a.pending, 0);
   const tQualified = sdrData.reduce((s, a) => s + a.qualified, 0);
@@ -247,7 +247,7 @@ export default function Dashboard() {
   const sdrTeamGap = Math.max(0, SDR_TEAM_GOAL - tBookings);
   const sdrTeamPaceAmt = SDR_TEAM_GOAL * pace;
   const sdrTeamPaceDiff = parseFloat((tBookings - sdrTeamPaceAmt).toFixed(1));
-  const sdrTeamBarColor = tBookings >= SDR_TEAM_GOAL ? "#16a34a" : tBookings / SDR_TEAM_GOAL >= pace ? "#3b82f6" : tBookings / SDR_TEAM_GOAL >= pace * 0.8 ? "#eab308" : "#dc2626";
+  const sdrTeamBarColor = tBookings >= SDR_TEAM_GOAL ? "#16a34a" : tBookings / SDR_TEAM_GOAL >= pace ? "#3b82f6" : tBookings / SDR_TEAM_GOAL >= pace * 0.8 ? "#facc15" : "#dc2626";
   const sdrQuotaHitters = sdrData.filter((s) => s.quota > 0 && s.booked >= s.quota).length;
   const sdrWithQuota = sdrData.filter((s) => s.quota > 0).length;
 
