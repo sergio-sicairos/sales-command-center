@@ -20,6 +20,18 @@ const AVATARS = {
   "James Rheaume": "/avatars/james-rheaume.jpg",
   "Blanchard Kenfack": "/avatars/blanchard-kenfack.jpg",
   "Nate Siebert": "/avatars/nate-siebert.jpg",
+  // SDRs
+  "Dan Malkary": "/avatars/dan-malkary.jpg",
+  "Julia McCullough": "/avatars/julia-mccullough.jpg",
+  "James Krepelka": "/avatars/james-krepelka.jpg",
+  "Solomon Bandy": "/avatars/solomon-bandy.jpg",
+  "Chris Voith": "/avatars/chris-voith.jpg",
+  "Colby Keces": "/avatars/colby-keces.jpg",
+  "Jack Dudzik": "/avatars/jack-dudzik.jpg",
+  "Austin Kuo": "/avatars/austin-kuo.jpg",
+  "Ross Derose": "/avatars/ross-derose.jpg",
+  "Luke Singer": "/avatars/luke-singer.jpg",
+  "Matthew Hafizi": "/avatars/matthew-hafizi.jpg",
 };
 
 const QUOTES = [
