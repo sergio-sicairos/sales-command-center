@@ -527,7 +527,7 @@ export default function Dashboard() {
               </div>
             ) : (
               /* ---- SDR TV GRID ---- */
-              <div className="tv-grid">
+              <div className="tv-grid" style={{ gap: 8 }}>
                 {sdrData.map((s, i) => {
                   const sdrQuota = s.quota || SDR_QUOTA;
                   const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
@@ -536,7 +536,7 @@ export default function Dashboard() {
                   const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
                   const ex = expanded === `sdr-tv-${i}`;
                   return (
-                    <div className="tv-card" key={s.name}>
+                    <div className="tv-card" key={s.name} style={{ padding: 14, gap: 7 }}>
                       <span className="tv-rank">#{i + 1}</span>
                       <div className="tv-top">
                         <Avatar name={s.name} size={56} />
