@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const now = new Date();
+    const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const monthStart = `${year}-${month}-01`;
