@@ -174,6 +174,7 @@ export default function Dashboard() {
   const [expanded, setExpanded] = useState(null);
   const [tvScale, setTvScale] = useState(1);
   const [loopMode, setLoopMode] = useState(false);
+  const [monthOffset, setMonthOffset] = useState(0);
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
@@ -189,18 +190,23 @@ export default function Dashboard() {
 
   const now = new Date();
   const MN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const cm = MN[now.getMonth()], cy = now.getFullYear();
-  const dim = new Date(cy, now.getMonth() + 1, 0).getDate(), dom = now.getDate(), pace = dom / dim;
+
+  const selectedDate = new Date(now.getFullYear(), now.getMonth() + monthOffset, 1);
+  const cm = MN[selectedDate.getMonth()], cy = selectedDate.getFullYear();
+  const dim = new Date(cy, selectedDate.getMonth() + 1, 0).getDate();
+  const dom = monthOffset === 0 ? now.getDate() : dim;
+  const pace = monthOffset === 0 ? dom / dim : 1;
+  const selectedMonthParam = `${cy}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}`;
 
   const load = useCallback(async () => {
     setLoading(true); setError(null);
     try {
-      const res = await fetch("/api/dashboard");
+      const res = await fetch(`/api/dashboard?month=${selectedMonthParam}`);
       if (!res.ok) throw new Error(`${res.status}`);
       setData(await res.json());
     } catch (e) { setError(e.message); }
     setLoading(false);
-  }, []);
+  }, [selectedMonthParam]);
   useEffect(() => { load(); }, [load]);
 
   useEffect(() => {
@@ -366,6 +372,7 @@ export default function Dashboard() {
             <div className="sub">Day {dom} of {dim} · {Math.round(pace * 100)}% through month</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button className={`rb ${monthOffset === -1 ? "active" : ""}`} onClick={() => { setMonthOffset((p) => p === 0 ? -1 : 0); setData(null); setExpanded(null); }}>{monthOffset === -1 ? "← This Month" : "Last Month"}</button>
             <button className={`rb ${isTV ? "active" : ""}`} onClick={() => setViewMode(isTV ? "table" : "tv")}>{isTV ? "◧ Table View" : "▦ TV Mode"}</button>
             <button className={`rb ${loopMode ? "active" : ""}`} onClick={() => setLoopMode((p) => !p)}>⟳ Loop</button>
             <button className="rb" onClick={load} disabled={loading}>{loading ? "Loading…" : "↻ Refresh"}</button>

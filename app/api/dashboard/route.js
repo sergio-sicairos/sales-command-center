@@ -5,15 +5,26 @@ import { AE_QUOTAS, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_QUOTAS, SDR_ROSTER,
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET() {
+export async function GET(request) {
   try {
-    const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const { searchParams } = new URL(request.url);
+    const monthParam = searchParams.get("month");
+
+    let year, month;
+    if (monthParam && /^\d{4}-\d{2}$/.test(monthParam)) {
+      year = parseInt(monthParam.split("-")[0]);
+      month = monthParam.split("-")[1];
+    } else {
+      const now = new Date(new Date().toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
+      year = now.getFullYear();
+      month = String(now.getMonth() + 1).padStart(2, "0");
+    }
+
     const monthStart = `${year}-${month}-01`;
-    const nextMonth = now.getMonth() + 1 === 12
+    const monthNum = parseInt(month);
+    const nextMonth = monthNum === 12
       ? `${year + 1}-01-01`
-      : `${year}-${String(now.getMonth() + 2).padStart(2, "0")}-01`;
+      : `${year}-${String(monthNum + 1).padStart(2, "0")}-01`;
 
     const closedWon = await soql(`
       SELECT Owner.Name, Name, Opportunity_ARR__c, CloseDate, LeadSource
