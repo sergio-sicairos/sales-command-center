@@ -1,6 +1,6 @@
 // app/api/dashboard/route.js
 import { soql } from "@/lib/salesforce";
-import { AE_QUOTAS, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_QUOTAS, SDR_ROSTER, SDR_TEAM_QUOTA, TEAM_GOAL } from "@/lib/constants";
+import { getAEQuotas, getSDRQuotas, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_ROSTER, SDR_TEAM_QUOTA, TEAM_GOAL } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -63,6 +63,9 @@ export async function GET(request) {
         AND SDR_Meeting_Qualified_Date__c < ${nextMonth}
       ORDER BY SDR_Meeting_Qualified_Date__c DESC
     `);
+
+    const AE_QUOTAS = getAEQuotas(`${year}-${month}`);
+    const SDR_QUOTAS = getSDRQuotas(`${year}-${month}`);
 
     const rosterNames = Object.keys(AE_QUOTAS);
     const rosterSet = new Set(rosterNames);
