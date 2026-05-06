@@ -17,7 +17,6 @@ const AVATARS = {
   "Nano Schmidt": "/avatars/nano-schmidt.png",
   "Jenni Lee": "/avatars/jenni-lee.png",
   "Swasthi Malladi": "/avatars/swasthi-malladi.png",
-  "Meghan Ministri": "/avatars/meghan-ministri.jpg",
   "James Rheaume": "/avatars/james-rheaume.jpg",
   "Blanchard Kenfack": "/avatars/blanchard-kenfack.jpg",
   "Nate Siebert": "/avatars/nate-siebert.jpg",
