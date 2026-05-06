@@ -570,33 +570,28 @@ export default function Dashboard() {
                   const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
                   const ex = expanded === `sdr-tv-${i}`;
                   return (
-                    <div className="tv-card" key={s.name} style={{ padding: 14, gap: 7 }}>
-                      <span className="tv-rank">#{i + 1}</span>
-                      <div className="tv-top">
-                        <Avatar name={s.name} size={56} />
-                        <div style={{ overflow: "hidden" }}>
-                          <div className="tv-name">{s.name}</div>
-                          <div className="tv-deals">{fmtPts(s.booked)}/{sdrQuota} target</div>
+                    <div className="tv-card" key={s.name} style={{ padding: 9, gap: 4, minHeight: 0 }}>
+                      <span className="tv-rank" style={{ fontSize: 11, top: 6, right: 9 }}>#{i + 1}</span>
+                      <div className="tv-top" style={{ gap: 8 }}>
+                        <Avatar name={s.name} size={36} />
+                        <div style={{ overflow: "hidden", minWidth: 0 }}>
+                          <div className="tv-name" style={{ fontSize: 13 }}>{s.name}</div>
+                          <div className="tv-deals" style={{ fontSize: 10, marginTop: 1 }}>{fmtPts(s.booked)}/{sdrQuota} target</div>
                         </div>
                       </div>
                       <div className="tv-arr">
-                        <span className="tv-arr-val">{fmtPts(s.booked)}</span>
-                        <span className="tv-arr-of">of {sdrQuota} mtgs</span>
+                        <span className="tv-arr-val" style={{ fontSize: 15 }}>{fmtPts(s.booked)}</span>
+                        <span className="tv-arr-of" style={{ fontSize: 10 }}>of {sdrQuota} mtgs</span>
                       </div>
-                      <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={5} />
+                      <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={4} />
                       <div className="tv-stats">
-                        <span className="tv-att" style={{ color: bc }}>{att}%</span>
-                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
+                        <span className="tv-att" style={{ color: bc, fontSize: 13 }}>{att}%</span>
+                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626", fontSize: 11 }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
                       </div>
-                      {(s.pendingOpps?.length > 0) && (
-                        <div style={{ fontSize: 11, color: "#94a3b8" }}>
-                          <span style={{ fontWeight: 600, color: "#64748b" }}>{s.pendingOpps.length}</span> pending opp{s.pendingOpps.length !== 1 ? "s" : ""}
-                        </div>
-                      )}
-                      <div className="tv-footer" style={{ justifyContent: "space-between" }}>
+                      <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: "auto" }}>
                         <StatusPill status={st} compact />
                         {s.opps?.length > 0 && (
-                          <span onClick={() => setExpanded(ex ? null : `sdr-tv-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
+                          <span onClick={() => setExpanded(ex ? null : `sdr-tv-${i}`)} style={{ width: 18, height: 18, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
                         )}
                       </div>
                       {ex && s.opps?.length > 0 && (
