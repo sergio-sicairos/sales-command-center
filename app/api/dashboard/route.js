@@ -115,11 +115,7 @@ export async function GET(request) {
 
     for (const opp of sdrMeetings) {
       const sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
-      if (!sdrName) continue;
-      if (!sdrMap[sdrName]) {
-        const quota = SDR_QUOTAS[sdrName] ?? SDR_MEETING_QUOTA;
-        sdrMap[sdrName] = { name: sdrName, booked: 0, pending: 0, qualified: 0, lost: 0, opps: [], pendingOpps: [], quota };
-      }
+      if (!sdrName || !sdrMap[sdrName]) continue;
       const points = opp.SDR_Points__c || 0;
       sdrMap[sdrName].booked += points;
       sdrMap[sdrName].opps.push({
