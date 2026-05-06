@@ -388,7 +388,8 @@ export default function Dashboard() {
 
         {/* ===== TEAM GOAL BAR ===== */}
         {!loading && !error && data && tab === "ae" && (
-          <div style={{ background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
+          <div style={{ display: "flex", gap: isTV ? 12 : 16, marginBottom: isTV ? 16 : 28, alignItems: "stretch" }}>
+            <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
                 <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>Monthly Team Goal — {cm} {cy}</div>
@@ -420,11 +421,24 @@ export default function Dashboard() {
               </div>
               <div style={{ fontSize: 11, color: "#94a3b8" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
             </div>
+            </div>
+            {(() => {
+              const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+              return (
+                <div style={{ width: isTV ? 320 : 360, background: "#0f172a", border: "1px solid #1e293b", borderRadius: 14, padding: isTV ? "18px 22px" : "22px 26px", display: "flex", flexDirection: "column", justifyContent: "center", color: "#f1f5f9" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569", marginBottom: 4 }}>Daily Motivation</div>
+                  <div style={{ fontSize: 32, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
+                  <div style={{ fontSize: 14, color: "#cbd5e1", lineHeight: 1.6, fontStyle: "italic" }}>{q.text}</div>
+                  <div style={{ fontSize: 12, color: "#475569", marginTop: 8 }}>— {q.author}</div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
         {!loading && !error && data && tab === "sdr" && (
-          <div style={{ background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px", marginBottom: isTV ? 16 : 28 }}>
+          <div style={{ display: "flex", gap: isTV ? 12 : 16, marginBottom: isTV ? 16 : 28, alignItems: "stretch" }}>
+            <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
                 <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>Monthly SDR Team Goal — {cm} {cy}</div>
@@ -456,6 +470,18 @@ export default function Dashboard() {
               </div>
               <div style={{ fontSize: 11, color: "#94a3b8" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
             </div>
+            </div>
+            {(() => {
+              const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
+              return (
+                <div style={{ width: isTV ? 320 : 360, background: "#0f172a", border: "1px solid #1e293b", borderRadius: 14, padding: isTV ? "18px 22px" : "22px 26px", display: "flex", flexDirection: "column", justifyContent: "center", color: "#f1f5f9" }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569", marginBottom: 4 }}>Daily Motivation</div>
+                  <div style={{ fontSize: 32, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
+                  <div style={{ fontSize: 14, color: "#cbd5e1", lineHeight: 1.6, fontStyle: "italic" }}>{q.text}</div>
+                  <div style={{ fontSize: 12, color: "#475569", marginTop: 8 }}>— {q.author}</div>
+                </div>
+              );
+            })()}
           </div>
         )}
 
@@ -518,18 +544,6 @@ export default function Dashboard() {
                     </div>
                   );
                 })}
-                {/* Daily Quote Card */}
-                {(() => {
-                  const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
-                  return (
-                    <div className="tv-summary" style={{ justifyContent: "center" }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569" }}>Daily Motivation</div>
-                      <div style={{ fontSize: 40, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
-                      <div style={{ fontSize: 16, color: "#cbd5e1", lineHeight: 1.7, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
-                      <div style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>— {q.author}</div>
-                    </div>
-                  );
-                })()}
               </div>
             ) : (
               /* ---- SDR TV GRID ---- */
@@ -584,18 +598,6 @@ export default function Dashboard() {
                     </div>
                   );
                 })}
-                {/* Daily Quote Card */}
-                {(() => {
-                  const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
-                  return (
-                    <div className="tv-summary" style={{ justifyContent: "center" }}>
-                      <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#475569" }}>Daily Motivation</div>
-                      <div style={{ fontSize: 40, color: "#1e293b", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
-                      <div style={{ fontSize: 16, color: "#cbd5e1", lineHeight: 1.7, fontStyle: "italic", flexGrow: 1 }}>{q.text}</div>
-                      <div style={{ fontSize: 13, color: "#475569", marginTop: 8 }}>— {q.author}</div>
-                    </div>
-                  );
-                })()}
               </div>
             )}
           </>
