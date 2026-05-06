@@ -439,11 +439,11 @@ export default function Dashboard() {
             {(() => {
               const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
               return (
-                <div style={{ width: isTV ? 320 : 360, background: "#f5f1ea", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 22px" : "22px 26px", display: "flex", flexDirection: "column", justifyContent: "center", color: "#0f172a" }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#94a3b8", marginBottom: 4 }}>Daily Motivation</div>
-                  <div style={{ fontSize: 32, color: "#cbd5e1", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
-                  <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, fontStyle: "italic" }}>{q.text}</div>
-                  <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 8 }}>— {q.author}</div>
+                <div style={{ width: isTV ? 340 : 380, background: "#e8eef5", border: "1px solid #cfd9e6", borderRadius: 14, padding: isTV ? "18px 22px" : "22px 26px", display: "flex", flexDirection: "column", justifyContent: "center", color: "#0f172a" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#64748b", marginBottom: 6 }}>Daily Motivation</div>
+                  <div style={{ fontSize: 42, color: "#94a3b8", lineHeight: 0.8, marginBottom: 6, fontFamily: "Georgia, serif" }}>"</div>
+                  <div style={{ fontSize: 17, color: "#1e293b", lineHeight: 1.5, fontStyle: "italic", fontWeight: 500 }}>{q.text}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", marginTop: 10, fontWeight: 500 }}>— {q.author}</div>
                 </div>
               );
             })()}
@@ -488,11 +488,11 @@ export default function Dashboard() {
             {(() => {
               const q = QUOTES[Math.floor(Date.now() / 86400000) % QUOTES.length];
               return (
-                <div style={{ width: isTV ? 320 : 360, background: "#f5f1ea", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 22px" : "22px 26px", display: "flex", flexDirection: "column", justifyContent: "center", color: "#0f172a" }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#94a3b8", marginBottom: 4 }}>Daily Motivation</div>
-                  <div style={{ fontSize: 32, color: "#cbd5e1", lineHeight: 0.8, marginBottom: 4, fontFamily: "Georgia, serif" }}>"</div>
-                  <div style={{ fontSize: 14, color: "#475569", lineHeight: 1.6, fontStyle: "italic" }}>{q.text}</div>
-                  <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 8 }}>— {q.author}</div>
+                <div style={{ width: isTV ? 340 : 380, background: "#e8eef5", border: "1px solid #cfd9e6", borderRadius: 14, padding: isTV ? "18px 22px" : "22px 26px", display: "flex", flexDirection: "column", justifyContent: "center", color: "#0f172a" }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.5, color: "#64748b", marginBottom: 6 }}>Daily Motivation</div>
+                  <div style={{ fontSize: 42, color: "#94a3b8", lineHeight: 0.8, marginBottom: 6, fontFamily: "Georgia, serif" }}>"</div>
+                  <div style={{ fontSize: 17, color: "#1e293b", lineHeight: 1.5, fontStyle: "italic", fontWeight: 500 }}>{q.text}</div>
+                  <div style={{ fontSize: 13, color: "#64748b", marginTop: 10, fontWeight: 500 }}>— {q.author}</div>
                 </div>
               );
             })()}
