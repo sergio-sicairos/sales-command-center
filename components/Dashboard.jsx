@@ -172,7 +172,7 @@ function Bar({ value, max, color, h = 4 }) {
 
 export default function Dashboard() {
   const [tab, setTab] = useState("ae");
-  const [viewMode, setViewMode] = useState("table");
+  const [viewMode] = useState("tv");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -379,7 +379,6 @@ export default function Dashboard() {
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button className={`rb ${monthOffset === -1 ? "active" : ""}`} onClick={() => { setMonthOffset((p) => p === 0 ? -1 : 0); setData(null); setExpanded(null); }}>{monthOffset === -1 ? "← This Month" : "Last Month"}</button>
-            <button className={`rb ${isTV ? "active" : ""}`} onClick={() => setViewMode(isTV ? "table" : "tv")}>{isTV ? "◧ Table View" : "▦ TV Mode"}</button>
             <button className={`rb ${loopMode ? "active" : ""}`} onClick={() => setLoopMode((p) => !p)}>⟳ Loop</button>
             <button className="rb" onClick={load} disabled={loading}>{loading ? "Loading…" : "↻ Refresh"}</button>
             <div className="live"><div className="ld" />{time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</div>
