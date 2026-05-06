@@ -36,6 +36,12 @@ const AVATARS = {
   "Jesse Mon": "/avatars/jesse-mon.jpg",
   "London Vidaurri": "/avatars/london-vidaurri.jpg",
   "Hemal Madaan": "/avatars/hemal-madaan.jpg",
+  "Marianna Manolioudaki": "/avatars/marianna-manolioudaki.jpg",
+  "Jaden Welborn": "/avatars/jaden-welborn.jpg",
+  "Willem Zook": "/avatars/willem-zook.jpg",
+  "Eve Thorsen": "/avatars/eve-thorsen.jpg",
+  "Jack Skerlj": "/avatars/jack-skerlj.jpg",
+  "Wossen Gedib": "/avatars/wossen-gedib.jpg",
 };
 
 const QUOTES = [
