@@ -573,7 +573,7 @@ export default function Dashboard() {
                     <div className="tv-card" key={s.name} style={{ padding: 9, gap: 4, minHeight: 0 }}>
                       <span className="tv-rank" style={{ fontSize: 11, top: 6, right: 9 }}>#{i + 1}</span>
                       <div className="tv-top" style={{ gap: 8 }}>
-                        <Avatar name={s.name} size={36} />
+                        <Avatar name={s.name} size={50} />
                         <div style={{ overflow: "hidden", minWidth: 0 }}>
                           <div className="tv-name" style={{ fontSize: 13 }}>{s.name}</div>
                           <div className="tv-deals" style={{ fontSize: 10, marginTop: 1 }}>{fmtPts(s.booked)}/{sdrQuota} target</div>
