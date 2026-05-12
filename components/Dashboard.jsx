@@ -576,7 +576,7 @@ export default function Dashboard() {
                         <Avatar name={s.name} size={50} />
                         <div style={{ overflow: "hidden", minWidth: 0 }}>
                           <div className="tv-name" style={{ fontSize: 13 }}>{s.name}</div>
-                          <div className="tv-deals" style={{ fontSize: 10, marginTop: 1 }}>{fmtPts(s.booked)}/{sdrQuota} target</div>
+                          <div className="tv-deals" style={{ fontSize: 10, marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{fmtPts(s.booked)}/{sdrQuota} target{s.pendingOpps?.length > 0 ? ` · ${s.pendingOpps.length} pending` : ""}</div>
                         </div>
                       </div>
                       <div className="tv-arr">
