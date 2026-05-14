@@ -595,7 +595,7 @@ export default function Dashboard() {
                         )}
                       </div>
                       {ex && s.opps?.length > 0 && (
-                        <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
+                        <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 12px", zIndex: 20, boxShadow: "0 8px 20px rgba(15,23,42,0.12)", display: "flex", flexDirection: "column", gap: 5 }}>
                           {s.opps.sort((a, b) => (b.points || 0) - (a.points || 0)).map((o, j) => (
                             <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
                               <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "70%" }}>{(o.name || "").length > 24 ? o.name.slice(0, 24) + "…" : o.name}</span>
