@@ -425,11 +425,11 @@ export default function Dashboard() {
         {/* ===== TEAM GOAL BAR ===== */}
         {!loading && !error && data && tab === "ae" && (
           <div style={{ display: "flex", gap: isTV ? 12 : 16, marginBottom: isTV ? 16 : 28, alignItems: "stretch" }}>
-            <div style={{ width: isTV ? 220 : 240, background: "linear-gradient(135deg, #ecfeff 0%, #f0fdf4 100%)", border: "1px solid #a7f3d0", borderRadius: 14, padding: isTV ? "12px 14px" : "16px 18px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, flexShrink: 0 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#0891b2", textAlign: "center", lineHeight: 1.3 }}>Costa Rica · by July 31</div>
-              <Donut percent={costaRicaPct} size={isTV ? 90 : 110} />
+            <div style={{ width: isTV ? 220 : 240, background: "linear-gradient(135deg, #fff7ed 0%, #fed7aa 60%, #fdba74 100%)", border: "2px solid #f97316", borderRadius: 14, padding: isTV ? "12px 14px" : "16px 18px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, flexShrink: 0, boxShadow: "0 4px 14px rgba(249,115,22,0.18)" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1.4, color: "#c2410c", textAlign: "center", lineHeight: 1.3 }}>Costa Rica Trip · by July 31</div>
+              <Donut percent={costaRicaPct} size={isTV ? 90 : 110} color="#ea580c" trackColor="#fff7ed" />
               <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 700, letterSpacing: -0.3 }}>{fmtF(companyArr)}</div>
-              <div style={{ fontSize: 10, color: "#64748b", textAlign: "center" }}>of $25M · {fmt(costaRicaGap)} to go</div>
+              <div style={{ fontSize: 10, color: "#7c2d12", textAlign: "center", fontWeight: 600 }}>of $25M · {fmt(costaRicaGap)} to go</div>
             </div>
             <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
@@ -480,11 +480,11 @@ export default function Dashboard() {
 
         {!loading && !error && data && tab === "sdr" && (
           <div style={{ display: "flex", gap: isTV ? 12 : 16, marginBottom: isTV ? 16 : 28, alignItems: "stretch" }}>
-            <div style={{ width: isTV ? 220 : 240, background: "linear-gradient(135deg, #ecfeff 0%, #f0fdf4 100%)", border: "1px solid #a7f3d0", borderRadius: 14, padding: isTV ? "12px 14px" : "16px 18px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, flexShrink: 0 }}>
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#0891b2", textAlign: "center", lineHeight: 1.3 }}>Costa Rica · by July 31</div>
-              <Donut percent={costaRicaPct} size={isTV ? 90 : 110} />
+            <div style={{ width: isTV ? 220 : 240, background: "linear-gradient(135deg, #fff7ed 0%, #fed7aa 60%, #fdba74 100%)", border: "2px solid #f97316", borderRadius: 14, padding: isTV ? "12px 14px" : "16px 18px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, flexShrink: 0, boxShadow: "0 4px 14px rgba(249,115,22,0.18)" }}>
+              <div style={{ fontSize: 11, fontWeight: 800, textTransform: "uppercase", letterSpacing: 1.4, color: "#c2410c", textAlign: "center", lineHeight: 1.3 }}>Costa Rica Trip · by July 31</div>
+              <Donut percent={costaRicaPct} size={isTV ? 90 : 110} color="#ea580c" trackColor="#fff7ed" />
               <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 700, letterSpacing: -0.3 }}>{fmtF(companyArr)}</div>
-              <div style={{ fontSize: 10, color: "#64748b", textAlign: "center" }}>of $25M · {fmt(costaRicaGap)} to go</div>
+              <div style={{ fontSize: 10, color: "#7c2d12", textAlign: "center", fontWeight: 600 }}>of $25M · {fmt(costaRicaGap)} to go</div>
             </div>
             <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
