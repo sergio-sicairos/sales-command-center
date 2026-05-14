@@ -64,6 +64,11 @@ export async function GET(request) {
       ORDER BY SDR_Meeting_Qualified_Date__c DESC
     `);
 
+    const companyArrRows = await soql(`
+      SELECT SUM(Current_ARR__c) total FROM Account WHERE Current_ARR__c > 0
+    `);
+    const companyArr = companyArrRows[0]?.total || 0;
+
     const AE_QUOTAS = getAEQuotas(`${year}-${month}`);
     const SDR_QUOTAS = getSDRQuotas(`${year}-${month}`);
 
@@ -141,6 +146,7 @@ export async function GET(request) {
     return Response.json({
       aeData,
       sdrData,
+      companyArr,
       config: { AE_QUOTAS, SDR_MEETING_QUOTA, SDR_TEAM_QUOTA, TEAM_GOAL },
       meta: {
         month: `${year}-${month}`,

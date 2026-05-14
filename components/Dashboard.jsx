@@ -175,6 +175,24 @@ function StatusPill({ status, compact = false }) {
   );
 }
 
+function Donut({ percent, size = 110, strokeWidth = 11, color = "#0891b2", trackColor = "#e0f2fe" }) {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const pct = Math.max(0, Math.min(percent, 100));
+  const offset = circumference - (pct / 100) * circumference;
+  return (
+    <div style={{ position: "relative", width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={trackColor} strokeWidth={strokeWidth} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={color} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.8s ease" }} />
+      </svg>
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+        <span style={{ fontSize: Math.round(size * 0.24), fontWeight: 700, color: "#0f172a", lineHeight: 1, letterSpacing: -0.5 }}>{Math.round(percent)}%</span>
+      </div>
+    </div>
+  );
+}
+
 function Bar({ value, max, color, h = 4 }) {
   const w = max > 0 ? Math.min((value / max) * 100, 100) : 0;
   return (
@@ -253,6 +271,10 @@ export default function Dashboard() {
 
   const aeData = data?.aeData || [];
   const sdrData = data?.sdrData || [];
+  const companyArr = data?.companyArr || 0;
+  const COSTA_RICA_GOAL = 25000000;
+  const costaRicaPct = (companyArr / COSTA_RICA_GOAL) * 100;
+  const costaRicaGap = Math.max(0, COSTA_RICA_GOAL - companyArr);
   const SDR_QUOTA = data?.config?.SDR_MEETING_QUOTA || 10;
   const SDR_TEAM_GOAL = data?.config?.SDR_TEAM_QUOTA || 105;
   const TEAM_GOAL = data?.config?.TEAM_GOAL || 1900000;
@@ -403,6 +425,12 @@ export default function Dashboard() {
         {/* ===== TEAM GOAL BAR ===== */}
         {!loading && !error && data && tab === "ae" && (
           <div style={{ display: "flex", gap: isTV ? 12 : 16, marginBottom: isTV ? 16 : 28, alignItems: "stretch" }}>
+            <div style={{ width: isTV ? 220 : 240, background: "linear-gradient(135deg, #ecfeff 0%, #f0fdf4 100%)", border: "1px solid #a7f3d0", borderRadius: 14, padding: isTV ? "12px 14px" : "16px 18px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, flexShrink: 0 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#0891b2", textAlign: "center", lineHeight: 1.3 }}>Costa Rica · by July 31</div>
+              <Donut percent={costaRicaPct} size={isTV ? 90 : 110} />
+              <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 700, letterSpacing: -0.3 }}>{fmtF(companyArr)}</div>
+              <div style={{ fontSize: 10, color: "#64748b", textAlign: "center" }}>of $25M · {fmt(costaRicaGap)} to go</div>
+            </div>
             <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
@@ -452,6 +480,12 @@ export default function Dashboard() {
 
         {!loading && !error && data && tab === "sdr" && (
           <div style={{ display: "flex", gap: isTV ? 12 : 16, marginBottom: isTV ? 16 : 28, alignItems: "stretch" }}>
+            <div style={{ width: isTV ? 220 : 240, background: "linear-gradient(135deg, #ecfeff 0%, #f0fdf4 100%)", border: "1px solid #a7f3d0", borderRadius: 14, padding: isTV ? "12px 14px" : "16px 18px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6, flexShrink: 0 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.3, color: "#0891b2", textAlign: "center", lineHeight: 1.3 }}>Costa Rica · by July 31</div>
+              <Donut percent={costaRicaPct} size={isTV ? 90 : 110} />
+              <div style={{ fontSize: 13, color: "#0f172a", fontWeight: 700, letterSpacing: -0.3 }}>{fmtF(companyArr)}</div>
+              <div style={{ fontSize: 10, color: "#64748b", textAlign: "center" }}>of $25M · {fmt(costaRicaGap)} to go</div>
+            </div>
             <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
