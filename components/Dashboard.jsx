@@ -19,6 +19,7 @@ const AVATARS = {
   "James Rheaume": "/avatars/james-rheaume.jpg",
   "Blanchard Kenfack": "/avatars/blanchard-kenfack.jpg",
   "Nate Siebert": "/avatars/nate-siebert.jpg",
+  "Elias Ramirez": "/avatars/elias-ramirez.jpg",
   // SDRs
   "Dan Malkary": "/avatars/dan-malkary.jpg",
   "Julia McCullough": "/avatars/julia-mccullough.jpg",
