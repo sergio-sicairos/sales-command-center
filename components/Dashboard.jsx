@@ -41,9 +41,9 @@ const AVATARS = {
   "Eve Thorsen": "/avatars/eve-thorsen.jpeg",
   "Jack Skerlj": "/avatars/jack-skerlj.jpeg",
   "Wossen Gedib": "/avatars/wossen-gedib.jpeg",
-  "Donovan Swan": "/avatars/donovan-swan.jpg",
-  "Tyler Parod": "/avatars/tyler-parod.jpg",
-  "Izzy Weiss": "/avatars/izzy-weiss.jpg",
+  "Donovan Swan": "/avatars/donovan-swan.jpeg",
+  "Tyler Parod": "/avatars/tyler-parod.jpeg",
+  "Izzy Weiss": "/avatars/izzy-weiss.jpeg",
 };
 
 const QUOTES = [
