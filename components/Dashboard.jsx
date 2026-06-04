@@ -216,6 +216,7 @@ export default function Dashboard() {
   const [tvScale, setTvScale] = useState(1);
   const [loopMode, setLoopMode] = useState(false);
   const [monthOffset, setMonthOffset] = useState(0);
+  const [sdrViewMode, setSdrViewMode] = useState("grid");
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
@@ -407,6 +408,26 @@ export default function Dashboard() {
         .tv-summary-sub { font-size: 10px; color: #475569; }
 
         @media (max-width: 800px) { .kpi-row { grid-template-columns: 1fr 1fr; } .dc { padding: 20px 16px; } .tv-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        .sdr-ticker-wrapper { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 16px; min-height: 260px; }
+        .sdr-ticker-row { overflow: hidden; }
+        .sdr-ticker { display: flex; gap: 16px; }
+        .sdr-ticker-left { animation: scroll-left 91s linear infinite; }
+        .sdr-ticker-right { animation: scroll-left 91s linear infinite reverse; }
+        .sdr-ticker:hover { animation-play-state: paused; cursor: grab; }
+        .sdr-ticker-item { flex: 0 0 280px; padding: 20px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; align-items: center; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .sdr-ticker-item:hover { border-color: #cbd5e1; background: #f8fafc; transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+        .sdr-ticker-rank { font-size: 12px; font-weight: 700; color: #cbd5e1; }
+        .sdr-ticker-top { display: flex; flex-direction: column; gap: 10px; align-items: center; text-align: center; }
+        .sdr-ticker-info { flex: 1; }
+        .sdr-ticker-name { font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 2px; }
+        .sdr-ticker-booked { font-size: 20px; font-weight: 700; color: #0f172a; margin-top: 4px; }
+        .sdr-ticker-quota { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+        .sdr-ticker-bar { margin: 8px 0; width: 100%; }
+        .sdr-ticker-stats { display: flex; gap: 8px; font-size: 10px; font-weight: 600; margin: 8px 0; width: 100%; justify-content: center; flex-wrap: wrap; }
+        .sdr-ticker-pending { font-size: 10px; color: #d97706; font-weight: 600; margin: 4px 0; }
+        @keyframes scroll-left { 0% { transform: translateX(1500px); } 100% { transform: translateX(-6808px); } }
+        @keyframes scroll-right { 0% { transform: translateX(-8000px); } 100% { transform: translateX(0px); } }
       `}</style>
 
       <div className="dc" style={isTV ? { width: "1440px", minHeight: "1020px", transform: `scale(${tvScale})`, transformOrigin: "top center", flexShrink: 0 } : {}}>
@@ -546,8 +567,107 @@ export default function Dashboard() {
             <div className="tabs" style={{ marginBottom: 16 }}>
               <button className={`tb ${tab === "ae" ? "on" : ""}`} onClick={() => { setTab("ae"); setExpanded(null); }}>Account Executives</button>
               <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDRs</button>
+              <button className={`tb ${tab === "combined" ? "on" : ""}`} onClick={() => { setTab("combined"); setExpanded(null); }}>Combined</button>
             </div>
-            {tab === "ae" ? (
+            {tab !== "combined" && (
+              <div style={{ display: "flex", gap: 8, marginBottom: 12, justifyContent: "flex-end" }}>
+                <button className={`rb`} onClick={() => { setSdrViewMode(sdrViewMode === "grid" ? "ticker" : "grid"); }}>
+                  {sdrViewMode === "ticker" ? "⊞ Grid" : "↔ Ticker"}
+                </button>
+              </div>
+            )}
+
+            {tab === "combined" ? (
+              /* ---- COMBINED AE + SDR TICKERS ---- */
+              <>
+                <div className="combined-ticker-wrapper">
+                  {/* AE Ticker - scrolling left */}
+                  <div style={{ marginBottom: 24 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Account Executives</div>
+                    <div className="sdr-ticker-wrapper" style={{ minHeight: 260 }}>
+                      <div className="sdr-ticker-row">
+                        <div className="sdr-ticker sdr-ticker-left">
+                          {aeData.concat(aeData).map((ae, i) => {
+                            const q = ae.quota || 0;
+                            const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
+                            const st = getStatus(ae.closed, q);
+                            const bc = attColor(att);
+                            const gap = ae.gap || 0;
+                            const origIndex = i % aeData.length;
+                            return (
+                              <div key={`${ae.name}-${i}`} className="sdr-ticker-item">
+                                <div className="sdr-ticker-rank">#{origIndex + 1}</div>
+                                <div className="sdr-ticker-top">
+                                  <Avatar name={ae.name} size={80} />
+                                  <div className="sdr-ticker-info">
+                                    <div className="sdr-ticker-name">{ae.name}</div>
+                                    <div style={{ display: "inline-flex", padding: "6px 14px", borderRadius: 20, background: `linear-gradient(135deg, ${bc}15 0%, ${bc}40 100%)`, border: `1.5px solid ${bc}`, color: bc, fontSize: 16, fontWeight: 700, marginTop: 6, gap: 4 }}>{fmtF(Math.round(ae.closed))}</div>
+                                    <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", marginTop: 6, justifyContent: "center" }}>
+                                      <span>of {q > 0 ? fmt(q) : "$0"}</span>
+                                      {ae.cnt > 0 && <span style={{ color: "#64748b", fontWeight: 600 }}>· {ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</span>}
+                                    </div>
+                                  </div>
+                                </div>
+                                <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={6} />
+                                <div className="sdr-ticker-stats">
+                                  <span style={{ color: bc }}>{att}%</span>
+                                  <span style={{ color: gap === 0 ? "#16a34a" : "#dc2626" }}>{gap === 0 ? "$0 gap" : `-${fmt(gap)}`}</span>
+                                </div>
+                                <StatusPill status={st} />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SDR Ticker - scrolling right (opposite direction) */}
+                  <div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Sales Development Reps</div>
+                    <div className="sdr-ticker-wrapper" style={{ minHeight: 260 }}>
+                      <div className="sdr-ticker-row">
+                        <div className="sdr-ticker sdr-ticker-right">
+                          {(() => {
+                            const reversedSdr = [...sdrData].reverse();
+                            return reversedSdr.concat(reversedSdr).map((s, i) => {
+                              const sdrQuota = s.quota || SDR_QUOTA;
+                              const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
+                              const st = getStatus(s.booked, sdrQuota);
+                              const bc = attColor(att);
+                              const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
+                              const origIndex = sdrData.length - 1 - (i % sdrData.length);
+                            return (
+                              <div key={`${s.name}-${i}`} className="sdr-ticker-item">
+                                <div className="sdr-ticker-rank">#{origIndex + 1}</div>
+                                <div className="sdr-ticker-top">
+                                  <Avatar name={s.name} size={80} />
+                                  <div className="sdr-ticker-info">
+                                    <div className="sdr-ticker-name">{s.name}</div>
+                                    <div style={{ display: "inline-flex", padding: "6px 14px", borderRadius: 20, background: `linear-gradient(135deg, ${bc}15 0%, ${bc}40 100%)`, border: `1.5px solid ${bc}`, color: bc, fontSize: 16, fontWeight: 700, marginTop: 6, gap: 4 }}>{fmtPts(s.booked)}</div>
+                                    <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", marginTop: 6, justifyContent: "center" }}>
+                                      <span>of {sdrQuota} target</span>
+                                      {s.pendingOpps?.length > 0 && <span style={{ color: "#d97706", fontWeight: 600 }}>· {s.pendingOpps.length} pending</span>}
+                                    </div>
+                                  </div>
+                                </div>
+                                <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={6} />
+                                <div className="sdr-ticker-stats">
+                                  <span style={{ color: bc }}>{att}%</span>
+                                  <span style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
+                                </div>
+                                <StatusPill status={st} />
+                              </div>
+                            );
+                            });
+                          })()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
+            ) : tab === "ae" ? (
               /* ---- AE TV GRID ---- */
               <div className="tv-grid">
                 {aeData.map((ae, i) => {
@@ -596,7 +716,7 @@ export default function Dashboard() {
                   );
                 })}
               </div>
-            ) : (
+            ) : sdrViewMode === "grid" ? (
               /* ---- SDR TV GRID ---- */
               <div className="tv-grid" style={{ gap: 8 }}>
                 {sdrData.map((s, i) => {
@@ -644,6 +764,44 @@ export default function Dashboard() {
                     </div>
                   );
                 })}
+              </div>
+            ) : (
+              /* ---- SDR TICKER ---- */
+              <div className="sdr-ticker-wrapper">
+                <div className="sdr-ticker-row">
+                  <div className="sdr-ticker sdr-ticker-left">
+                    {sdrData.concat(sdrData).map((s, i) => {
+                    const sdrQuota = s.quota || SDR_QUOTA;
+                    const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
+                    const st = getStatus(s.booked, sdrQuota);
+                    const bc = attColor(att);
+                    const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
+                    const origIndex = i % sdrData.length;
+                    return (
+                      <div key={`${s.name}-${i}`} className="sdr-ticker-item">
+                        <div className="sdr-ticker-rank">#{origIndex + 1}</div>
+                        <div className="sdr-ticker-top">
+                          <Avatar name={s.name} size={80} />
+                          <div className="sdr-ticker-info">
+                            <div className="sdr-ticker-name">{s.name}</div>
+                            <div className="sdr-ticker-booked">{fmtPts(s.booked)}</div>
+                            <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", marginTop: 2, justifyContent: "center" }}>
+                              <span>of {sdrQuota} target</span>
+                              {s.pendingOpps?.length > 0 && <span style={{ color: "#d97706", fontWeight: 600 }}>· {s.pendingOpps.length} pending</span>}
+                            </div>
+                          </div>
+                        </div>
+                        <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={6} />
+                        <div className="sdr-ticker-stats">
+                          <span style={{ color: bc }}>{att}%</span>
+                          <span style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
+                        </div>
+                        <StatusPill status={st} />
+                      </div>
+                    );
+                  })}
+                  </div>
+                </div>
               </div>
             )}
           </>
