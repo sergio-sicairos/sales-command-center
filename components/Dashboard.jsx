@@ -217,6 +217,7 @@ export default function Dashboard() {
   const [loopMode, setLoopMode] = useState(false);
   const [monthOffset, setMonthOffset] = useState(0);
   const [sdrViewMode, setSdrViewMode] = useState("grid");
+  const [selectedTickerCard, setSelectedTickerCard] = useState(null);
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
@@ -409,13 +410,13 @@ export default function Dashboard() {
 
         @media (max-width: 800px) { .kpi-row { grid-template-columns: 1fr 1fr; } .dc { padding: 20px 16px; } .tv-grid { grid-template-columns: repeat(2, 1fr); } }
 
-        .sdr-ticker-wrapper { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 16px; min-height: 260px; }
+        .sdr-ticker-wrapper { background: linear-gradient(135deg, #cfe2f3 0%, #d4e4f7 100%); border: 3px solid #90caf9; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 16px; min-height: 260px; }
         .sdr-ticker-row { overflow: hidden; }
-        .sdr-ticker { display: flex; gap: 16px; }
+        .sdr-ticker { display: flex; gap: 0; }
         .sdr-ticker-left { animation: scroll-left 91s linear infinite; }
         .sdr-ticker-right { animation: scroll-left 91s linear infinite reverse; }
         .sdr-ticker:hover { animation-play-state: paused; cursor: grab; }
-        .sdr-ticker-item { flex: 0 0 280px; padding: 20px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; align-items: center; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+        .sdr-ticker-item { flex: 0 0 280px; padding: 20px; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; flex-direction: column; gap: 12px; align-items: center; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin: 0 8px; }
         .sdr-ticker-item:hover { border-color: #cbd5e1; background: #f8fafc; transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
         .sdr-ticker-rank { font-size: 12px; font-weight: 700; color: #cbd5e1; }
         .sdr-ticker-top { display: flex; flex-direction: column; gap: 10px; align-items: center; text-align: center; }
@@ -426,8 +427,8 @@ export default function Dashboard() {
         .sdr-ticker-bar { margin: 8px 0; width: 100%; }
         .sdr-ticker-stats { display: flex; gap: 8px; font-size: 10px; font-weight: 600; margin: 8px 0; width: 100%; justify-content: center; flex-wrap: wrap; }
         .sdr-ticker-pending { font-size: 10px; color: #d97706; font-weight: 600; margin: 4px 0; }
-        @keyframes scroll-left { 0% { transform: translateX(1500px); } 100% { transform: translateX(-6808px); } }
-        @keyframes scroll-right { 0% { transform: translateX(-8000px); } 100% { transform: translateX(0px); } }
+        @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-6808px); } }
+        @keyframes scroll-right { 0% { transform: translateX(-6808px); } 100% { transform: translateX(0); } }
       `}</style>
 
       <div className="dc" style={isTV ? { width: "1440px", minHeight: "1020px", transform: `scale(${tvScale})`, transformOrigin: "top center", flexShrink: 0 } : {}}>
@@ -595,7 +596,7 @@ export default function Dashboard() {
                             const gap = ae.gap || 0;
                             const origIndex = i % aeData.length;
                             return (
-                              <div key={`${ae.name}-${i}`} className="sdr-ticker-item">
+                              <div key={`${ae.name}-${i}`} className="sdr-ticker-item" onClick={() => setSelectedTickerCard({ type: 'ae', name: ae.name, deals: ae.deals, closed: ae.closed, quota: ae.quota })} style={{ cursor: 'pointer' }}>
                                 <div className="sdr-ticker-rank">#{origIndex + 1}</div>
                                 <div className="sdr-ticker-top">
                                   <Avatar name={ae.name} size={80} />
@@ -638,7 +639,7 @@ export default function Dashboard() {
                               const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
                               const origIndex = sdrData.length - 1 - (i % sdrData.length);
                             return (
-                              <div key={`${s.name}-${i}`} className="sdr-ticker-item">
+                              <div key={`${s.name}-${i}`} className="sdr-ticker-item" onClick={() => setSelectedTickerCard({ type: 'sdr', name: s.name, opps: s.opps, booked: s.booked, quota: sdrQuota })} style={{ cursor: 'pointer' }}>
                                 <div className="sdr-ticker-rank">#{origIndex + 1}</div>
                                 <div className="sdr-ticker-top">
                                   <Avatar name={s.name} size={80} />
@@ -666,7 +667,44 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-              </>
+              {selectedTickerCard && (
+                <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }} onClick={() => setSelectedTickerCard(null)}>
+                  <div style={{ background: "#fff", borderRadius: 16, padding: 32, maxWidth: 600, maxHeight: "80vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} onClick={(e) => e.stopPropagation()}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
+                      <div>
+                        <h2 style={{ fontSize: 24, fontWeight: 700, color: "#0f172a", margin: 0 }}>{selectedTickerCard.name}</h2>
+                        <p style={{ fontSize: 14, color: "#64748b", margin: "4px 0 0 0" }}>{selectedTickerCard.type === 'ae' ? `$${fmt(selectedTickerCard.closed)} of $${fmt(selectedTickerCard.quota)}` : `${selectedTickerCard.booked} of ${selectedTickerCard.quota} meetings`}</p>
+                      </div>
+                      <button onClick={() => setSelectedTickerCard(null)} style={{ background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#94a3b8" }}>×</button>
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                      {selectedTickerCard.type === 'ae' ? (
+                        selectedTickerCard.deals?.length > 0 ? (
+                          selectedTickerCard.deals.map((d, i) => (
+                            <div key={i} style={{ padding: 12, background: "#f8fafc", borderRadius: 8, borderLeft: "3px solid #16a34a" }}>
+                              <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: 4 }}>{d.name}</div>
+                              <div style={{ fontSize: 12, color: "#64748b" }}>{fmt(d.arr)} · {d.close}</div>
+                            </div>
+                          ))
+                        ) : (
+                          <div style={{ color: "#94a3b8", textAlign: "center", padding: "20px 0" }}>No deals closed this period</div>
+                        )
+                      ) : (
+                        selectedTickerCard.opps?.length > 0 ? (
+                          selectedTickerCard.opps.map((o, i) => (
+                            <div key={i} style={{ padding: 12, background: "#f8fafc", borderRadius: 8, borderLeft: "3px solid #3b82f6" }}>
+                              <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: 4 }}>{o.name}</div>
+                              <div style={{ fontSize: 12, color: "#64748b" }}>{o.stage} · {fmtPts(o.points || 0)} pt</div>
+                            </div>
+                          ))
+                        ) : (
+                          <div style={{ color: "#94a3b8", textAlign: "center", padding: "20px 0" }}>No opportunities</div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             ) : tab === "ae" ? (
               /* ---- AE TV GRID ---- */
               <div className="tv-grid">
