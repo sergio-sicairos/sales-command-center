@@ -646,15 +646,16 @@ export default function Dashboard() {
               </div>
             ) : sdrViewMode === "grid" ? (
               /* ---- SDR TV GRID ---- */
-              {(() => {
-                const itemsPerPage = 15; // 5 columns × 3 rows
-                const pages = [];
-                for (let i = 0; i < sdrData.length; i += itemsPerPage) {
-                  pages.push(sdrData.slice(i, i + itemsPerPage));
-                }
-                const currentPage = pages[sdrPageIndex] || [];
-                return (
-                  <div>
+              <div>
+                {(() => {
+                  const itemsPerPage = 15; // 5 columns × 3 rows
+                  const pages = [];
+                  for (let i = 0; i < sdrData.length; i += itemsPerPage) {
+                    pages.push(sdrData.slice(i, i + itemsPerPage));
+                  }
+                  const currentPage = pages[sdrPageIndex] || [];
+                  return (
+                    <>
                     <div className="tv-grid">
                       {currentPage.map((s, i) => {
                         const actualIndex = sdrPageIndex * itemsPerPage + i;
@@ -700,13 +701,14 @@ export default function Dashboard() {
                         </div>
                       )}
                     </div>
-                        );
-                      })}
+                  );
+                })}
                     </div>
-                    {pages.length > 1 && <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", marginTop: 12 }}>Page {sdrPageIndex + 1} of {pages.length}</div>}
-                  </div>
-                );
-              })()}
+                    {pages.length > 1 && <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", marginTop: 16 }}>Page {sdrPageIndex + 1} of {pages.length}</div>}
+                    </>
+                  );
+                })()}
+              </div>
             ) : (
               /* ---- SDR TICKER ---- */
               <div className="sdr-ticker-wrapper">
