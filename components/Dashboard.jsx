@@ -216,7 +216,6 @@ export default function Dashboard() {
   const [loopMode, setLoopMode] = useState(false);
   const [monthOffset, setMonthOffset] = useState(0);
   const [sdrViewMode, setSdrViewMode] = useState("grid");
-  const [selectedTickerCard, setSelectedTickerCard] = useState(null);
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
@@ -567,144 +566,14 @@ export default function Dashboard() {
             <div className="tabs" style={{ marginBottom: 16 }}>
               <button className={`tb ${tab === "ae" ? "on" : ""}`} onClick={() => { setTab("ae"); setExpanded(null); }}>Account Executives</button>
               <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDRs</button>
-              <button className={`tb ${tab === "combined" ? "on" : ""}`} onClick={() => { setTab("combined"); setExpanded(null); }}>Combined</button>
             </div>
-            {tab !== "combined" && (
-              <div style={{ display: "flex", gap: 8, marginBottom: 12, justifyContent: "flex-end" }}>
-                <button className={`rb`} onClick={() => { setSdrViewMode(sdrViewMode === "grid" ? "ticker" : "grid"); }}>
-                  {sdrViewMode === "ticker" ? "⊞ Grid" : "↔ Ticker"}
-                </button>
-              </div>
-            )}
+            <div style={{ display: "flex", gap: 8, marginBottom: 12, justifyContent: "flex-end" }}>
+              <button className={`rb`} onClick={() => { setSdrViewMode(sdrViewMode === "grid" ? "ticker" : "grid"); }}>
+                {sdrViewMode === "ticker" ? "⊞ Grid" : "↔ Ticker"}
+              </button>
+            </div>
 
-            {tab === "combined" ? (
-              /* ---- COMBINED AE + SDR TICKERS ---- */
-              <>
-                <div className="combined-ticker-wrapper">
-                  {/* AE Ticker - scrolling left */}
-                  <div style={{ marginBottom: 24 }}>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Account Executives</div>
-                    <div className="sdr-ticker-wrapper" style={{ minHeight: 260 }}>
-                      <div className="sdr-ticker-row">
-                        <div className="sdr-ticker sdr-ticker-left">
-                          {aeData.concat(aeData).map((ae, i) => {
-                            const q = ae.quota || 0;
-                            const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
-                            const st = getStatus(ae.closed, q);
-                            const bc = attColor(att);
-                            const gap = ae.gap || 0;
-                            const origIndex = i % aeData.length;
-                            return (
-                              <div key={`${ae.name}-${i}`} className="sdr-ticker-item" onClick={() => setSelectedTickerCard({ type: 'ae', name: ae.name, deals: ae.deals, closed: ae.closed, quota: ae.quota })} style={{ cursor: 'pointer' }}>
-                                <div className="sdr-ticker-rank">#{origIndex + 1}</div>
-                                <div className="sdr-ticker-top">
-                                  <Avatar name={ae.name} size={80} />
-                                  <div className="sdr-ticker-info">
-                                    <div className="sdr-ticker-name">{ae.name}</div>
-                                    <div style={{ display: "inline-flex", padding: "6px 14px", borderRadius: 20, background: `linear-gradient(135deg, ${bc}15 0%, ${bc}40 100%)`, border: `1.5px solid ${bc}`, color: bc, fontSize: 16, fontWeight: 700, marginTop: 6, gap: 4 }}>{fmtF(Math.round(ae.closed))}</div>
-                                    <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", marginTop: 6, justifyContent: "center" }}>
-                                      <span>of {q > 0 ? fmt(q) : "$0"}</span>
-                                      {ae.cnt > 0 && <span style={{ color: "#64748b", fontWeight: 600 }}>· {ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</span>}
-                                    </div>
-                                  </div>
-                                </div>
-                                <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={6} />
-                                <div className="sdr-ticker-stats">
-                                  <span style={{ color: bc }}>{att}%</span>
-                                  <span style={{ color: gap === 0 ? "#16a34a" : "#dc2626" }}>{gap === 0 ? "$0 gap" : `-${fmt(gap)}`}</span>
-                                </div>
-                                <StatusPill status={st} />
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* SDR Ticker - scrolling right (opposite direction) */}
-                  <div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Sales Development Reps</div>
-                    <div className="sdr-ticker-wrapper" style={{ minHeight: 260 }}>
-                      <div className="sdr-ticker-row">
-                        <div className="sdr-ticker sdr-ticker-right">
-                          {(() => {
-                            const reversedSdr = [...sdrData].reverse();
-                            return reversedSdr.concat(reversedSdr).map((s, i) => {
-                              const sdrQuota = s.quota || SDR_QUOTA;
-                              const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
-                              const st = getStatus(s.booked, sdrQuota);
-                              const bc = attColor(att);
-                              const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
-                              const origIndex = sdrData.length - 1 - (i % sdrData.length);
-                            return (
-                              <div key={`${s.name}-${i}`} className="sdr-ticker-item" onClick={() => setSelectedTickerCard({ type: 'sdr', name: s.name, opps: s.opps, booked: s.booked, quota: sdrQuota })} style={{ cursor: 'pointer' }}>
-                                <div className="sdr-ticker-rank">#{origIndex + 1}</div>
-                                <div className="sdr-ticker-top">
-                                  <Avatar name={s.name} size={80} />
-                                  <div className="sdr-ticker-info">
-                                    <div className="sdr-ticker-name">{s.name}</div>
-                                    <div style={{ display: "inline-flex", padding: "6px 14px", borderRadius: 20, background: `linear-gradient(135deg, ${bc}15 0%, ${bc}40 100%)`, border: `1.5px solid ${bc}`, color: bc, fontSize: 16, fontWeight: 700, marginTop: 6, gap: 4 }}>{fmtPts(s.booked)}</div>
-                                    <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", marginTop: 6, justifyContent: "center" }}>
-                                      <span>of {sdrQuota} target</span>
-                                      {s.pendingOpps?.length > 0 && <span style={{ color: "#d97706", fontWeight: 600 }}>· {s.pendingOpps.length} pending</span>}
-                                    </div>
-                                  </div>
-                                </div>
-                                <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={6} />
-                                <div className="sdr-ticker-stats">
-                                  <span style={{ color: bc }}>{att}%</span>
-                                  <span style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
-                                </div>
-                                <StatusPill status={st} />
-                              </div>
-                            );
-                            });
-                          })()}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              {selectedTickerCard && (
-                <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }} onClick={() => setSelectedTickerCard(null)}>
-                  <div style={{ background: "#fff", borderRadius: 16, padding: 32, maxWidth: 600, maxHeight: "80vh", overflowY: "auto", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} onClick={(e) => e.stopPropagation()}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-                      <div>
-                        <h2 style={{ fontSize: 24, fontWeight: 700, color: "#0f172a", margin: 0 }}>{selectedTickerCard.name}</h2>
-                        <p style={{ fontSize: 14, color: "#64748b", margin: "4px 0 0 0" }}>{selectedTickerCard.type === 'ae' ? `$${fmt(selectedTickerCard.closed)} of $${fmt(selectedTickerCard.quota)}` : `${selectedTickerCard.booked} of ${selectedTickerCard.quota} meetings`}</p>
-                      </div>
-                      <button onClick={() => setSelectedTickerCard(null)} style={{ background: "none", border: "none", fontSize: 24, cursor: "pointer", color: "#94a3b8" }}>×</button>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                      {selectedTickerCard.type === 'ae' ? (
-                        selectedTickerCard.deals?.length > 0 ? (
-                          selectedTickerCard.deals.map((d, i) => (
-                            <div key={i} style={{ padding: 12, background: "#f8fafc", borderRadius: 8, borderLeft: "3px solid #16a34a" }}>
-                              <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: 4 }}>{d.name}</div>
-                              <div style={{ fontSize: 12, color: "#64748b" }}>{fmt(d.arr)} · {d.close}</div>
-                            </div>
-                          ))
-                        ) : (
-                          <div style={{ color: "#94a3b8", textAlign: "center", padding: "20px 0" }}>No deals closed this period</div>
-                        )
-                      ) : (
-                        selectedTickerCard.opps?.length > 0 ? (
-                          selectedTickerCard.opps.map((o, i) => (
-                            <div key={i} style={{ padding: 12, background: "#f8fafc", borderRadius: 8, borderLeft: "3px solid #3b82f6" }}>
-                              <div style={{ fontWeight: 600, color: "#0f172a", marginBottom: 4 }}>{o.name}</div>
-                              <div style={{ fontSize: 12, color: "#64748b" }}>{o.stage} · {fmtPts(o.points || 0)} pt</div>
-                            </div>
-                          ))
-                        ) : (
-                          <div style={{ color: "#94a3b8", textAlign: "center", padding: "20px 0" }}>No opportunities</div>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-            ) : tab === "ae" ? (
+            {tab === "ae" ? (
               /* ---- AE TV GRID ---- */
               <div className="tv-grid">
                 {aeData.map((ae, i) => {
