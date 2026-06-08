@@ -43,6 +43,7 @@ const AVATARS = {
   "Donovan Swan": "/avatars/donovan-swan.jpeg",
   "Tyler Parod": "/avatars/tyler-parod.jpeg",
   "Izzy Weiss": "/avatars/izzy-weiss.jpeg",
+  "Shwetha Rajmohan": "/avatars/shwetha Rajmohan.png",
 };
 
 const QUOTES = [
@@ -215,7 +216,6 @@ export default function Dashboard() {
   const [tvScale, setTvScale] = useState(1);
   const [loopMode, setLoopMode] = useState(false);
   const [monthOffset, setMonthOffset] = useState(0);
-  const [sdrViewMode, setSdrViewMode] = useState("grid");
   const [sdrPageIndex, setSdrPageIndex] = useState(0);
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
@@ -589,11 +589,6 @@ export default function Dashboard() {
               <button className={`tb ${tab === "ae" ? "on" : ""}`} onClick={() => { setTab("ae"); setExpanded(null); }}>Account Executives</button>
               <button className={`tb ${tab === "sdr" ? "on" : ""}`} onClick={() => { setTab("sdr"); setExpanded(null); }}>SDRs</button>
             </div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 12, justifyContent: "flex-end" }}>
-              <button className={`rb`} onClick={() => { setSdrViewMode(sdrViewMode === "grid" ? "ticker" : "grid"); }}>
-                {sdrViewMode === "ticker" ? "⊞ Grid" : "↔ Ticker"}
-              </button>
-            </div>
 
             {tab === "ae" ? (
               /* ---- AE TV GRID ---- */
@@ -644,7 +639,7 @@ export default function Dashboard() {
                   );
                 })}
               </div>
-            ) : sdrViewMode === "grid" ? (
+            ) : (
               /* ---- SDR TV GRID ---- */
               <div>
                 {(() => {
@@ -714,44 +709,6 @@ export default function Dashboard() {
                     </>
                   );
                 })()}
-              </div>
-            ) : (
-              /* ---- SDR TICKER ---- */
-              <div className="sdr-ticker-wrapper">
-                <div className="sdr-ticker-row">
-                  <div className="sdr-ticker sdr-ticker-left">
-                    {sdrData.concat(sdrData).map((s, i) => {
-                    const sdrQuota = s.quota || SDR_QUOTA;
-                    const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
-                    const st = getStatus(s.booked, sdrQuota);
-                    const bc = attColor(att);
-                    const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
-                    const origIndex = i % sdrData.length;
-                    return (
-                      <div key={`${s.name}-${i}`} className="sdr-ticker-item">
-                        <div className="sdr-ticker-rank">#{origIndex + 1}</div>
-                        <div className="sdr-ticker-top">
-                          <Avatar name={s.name} size={80} />
-                          <div className="sdr-ticker-info">
-                            <div className="sdr-ticker-name">{s.name}</div>
-                            <div className="sdr-ticker-booked">{fmtPts(s.booked)}</div>
-                            <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", marginTop: 2, justifyContent: "center" }}>
-                              <span>of {sdrQuota} target</span>
-                              {s.pendingOpps?.length > 0 && <span style={{ color: "#d97706", fontWeight: 600 }}>· {s.pendingOpps.length} pending</span>}
-                            </div>
-                          </div>
-                        </div>
-                        <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={6} />
-                        <div className="sdr-ticker-stats">
-                          <span style={{ color: bc }}>{att}%</span>
-                          <span style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
-                        </div>
-                        <StatusPill status={st} />
-                      </div>
-                    );
-                  })}
-                  </div>
-                </div>
               </div>
             )}
           </>
