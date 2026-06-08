@@ -216,6 +216,7 @@ export default function Dashboard() {
   const [loopMode, setLoopMode] = useState(false);
   const [monthOffset, setMonthOffset] = useState(0);
   const [sdrViewMode, setSdrViewMode] = useState("grid");
+  const [sdrPageIndex, setSdrPageIndex] = useState(0);
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
@@ -252,8 +253,29 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!loopMode) return;
-    const t = setInterval(() => setTab((prev) => prev === "ae" ? "sdr" : "ae"), 60000);
-    return () => clearInterval(t);
+    let elapsedTime = 0;
+    const interval = setInterval(() => {
+      elapsedTime += 30000; // Check every 30 seconds
+      const cycleTime = elapsedTime % 240000; // 240s cycle: 60s AE + 30s*3 SDR pages + 30s
+
+      if (cycleTime < 60000) { // AE for 60s
+        setTab("ae");
+        setSdrPageIndex(0);
+      } else if (cycleTime < 90000) { // SDR page 0 for 30s
+        setTab("sdr");
+        setSdrPageIndex(0);
+      } else if (cycleTime < 120000) { // SDR page 1 for 30s
+        setTab("sdr");
+        setSdrPageIndex(1);
+      } else if (cycleTime < 150000) { // SDR page 0 again for 30s
+        setTab("sdr");
+        setSdrPageIndex(0);
+      } else { // SDR page 1 again for 30s
+        setTab("sdr");
+        setSdrPageIndex(1);
+      }
+    }, 30000);
+    return () => clearInterval(interval);
   }, [loopMode]);
 
 
@@ -624,32 +646,42 @@ export default function Dashboard() {
               </div>
             ) : sdrViewMode === "grid" ? (
               /* ---- SDR TV GRID ---- */
-              <div className="tv-grid" style={{ gap: 8 }}>
-                {sdrData.map((s, i) => {
-                  const sdrQuota = s.quota || SDR_QUOTA;
-                  const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
-                  const st = getStatus(s.booked, sdrQuota);
-                  const bc = attColor(att);
-                  const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
-                  const ex = expanded === `sdr-tv-${i}`;
+              {(() => {
+                const itemsPerPage = 15; // 5 columns × 3 rows
+                const pages = [];
+                for (let i = 0; i < sdrData.length; i += itemsPerPage) {
+                  pages.push(sdrData.slice(i, i + itemsPerPage));
+                }
+                const currentPage = pages[sdrPageIndex] || [];
+                return (
+                  <div>
+                    <div className="tv-grid">
+                      {currentPage.map((s, i) => {
+                        const actualIndex = sdrPageIndex * itemsPerPage + i;
+                        const sdrQuota = s.quota || SDR_QUOTA;
+                        const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
+                        const st = getStatus(s.booked, sdrQuota);
+                        const bc = attColor(att);
+                        const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
+                        const ex = expanded === `sdr-tv-${actualIndex}`;
                   return (
-                    <div className="tv-card" key={s.name} style={{ padding: 9, gap: 4, minHeight: 0 }}>
-                      <span className="tv-rank" style={{ fontSize: 11, top: 6, right: 9 }}>#{i + 1}</span>
-                      <div className="tv-top" style={{ gap: 8 }}>
-                        <Avatar name={s.name} size={50} />
-                        <div style={{ overflow: "hidden", minWidth: 0 }}>
-                          <div className="tv-name" style={{ fontSize: 13 }}>{s.name}</div>
-                          <div className="tv-deals" style={{ fontSize: 10, marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{fmtPts(s.booked)}/{sdrQuota} target{s.pendingOpps?.length > 0 ? <> · <span style={{ color: "#d97706", fontWeight: 600 }}>{s.pendingOpps.length} pending</span></> : ""}</div>
+                    <div className="tv-card" key={s.name}>
+                      <span className="tv-rank">#{actualIndex + 1}</span>
+                      <div className="tv-top">
+                        <Avatar name={s.name} size={56} />
+                        <div style={{ overflow: "hidden" }}>
+                          <div className="tv-name">{s.name}</div>
+                          <div className="tv-deals">{fmtPts(s.booked)} meeting{s.booked !== 1 ? "s" : ""}</div>
                         </div>
                       </div>
                       <div className="tv-arr">
-                        <span className="tv-arr-val" style={{ fontSize: 15 }}>{fmtPts(s.booked)}</span>
-                        <span className="tv-arr-of" style={{ fontSize: 10 }}>of {sdrQuota} mtgs</span>
+                        <span className="tv-arr-val">{fmtPts(s.booked)}</span>
+                        <span className="tv-arr-of">of {sdrQuota} mtgs</span>
                       </div>
-                      <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={4} />
+                      <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={5} />
                       <div className="tv-stats">
-                        <span className="tv-att" style={{ color: bc, fontSize: 13 }}>{att}%</span>
-                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626", fontSize: 11 }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
+                        <span className="tv-att" style={{ color: bc }}>{att}%</span>
+                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
                       </div>
                       <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: "auto" }}>
                         <StatusPill status={st} compact />
@@ -668,9 +700,13 @@ export default function Dashboard() {
                         </div>
                       )}
                     </div>
-                  );
-                })}
-              </div>
+                        );
+                      })}
+                    </div>
+                    {pages.length > 1 && <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", marginTop: 12 }}>Page {sdrPageIndex + 1} of {pages.length}</div>}
+                  </div>
+                );
+              })()}
             ) : (
               /* ---- SDR TICKER ---- */
               <div className="sdr-ticker-wrapper">
