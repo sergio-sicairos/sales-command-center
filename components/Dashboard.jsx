@@ -17,7 +17,6 @@ const AVATARS = {
   "Nano Schmidt": "/avatars/nano-schmidt.png",
   "Jenni Lee": "/avatars/jenni-lee.png",
   "James Rheaume": "/avatars/james-rheaume.jpg",
-  "Blanchard Kenfack": "/avatars/blanchard-kenfack.jpg",
   "Nate Siebert": "/avatars/nate-siebert.jpg",
   "Elias Ramirez": "/avatars/elias-ramirez.png",
   // SDRs
