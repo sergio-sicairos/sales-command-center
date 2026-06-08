@@ -704,7 +704,13 @@ export default function Dashboard() {
                   );
                 })}
                     </div>
-                    {pages.length > 1 && <div style={{ fontSize: 11, color: "#94a3b8", textAlign: "center", marginTop: 16 }}>Page {sdrPageIndex + 1} of {pages.length}</div>}
+                    {pages.length > 1 && (
+                      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 16 }}>
+                        <button onClick={() => setSdrPageIndex(Math.max(0, sdrPageIndex - 1))} disabled={sdrPageIndex === 0} style={{ padding: "6px 12px", fontSize: 12, background: sdrPageIndex === 0 ? "#f1f5f9" : "#e2e8f0", color: sdrPageIndex === 0 ? "#cbd5e1" : "#475569", border: "1px solid #cbd5e1", borderRadius: 4, cursor: sdrPageIndex === 0 ? "default" : "pointer" }}>← Previous</button>
+                        <span style={{ fontSize: 11, color: "#94a3b8" }}>Page {sdrPageIndex + 1} of {pages.length}</span>
+                        <button onClick={() => setSdrPageIndex(Math.min(pages.length - 1, sdrPageIndex + 1))} disabled={sdrPageIndex === pages.length - 1} style={{ padding: "6px 12px", fontSize: 12, background: sdrPageIndex === pages.length - 1 ? "#f1f5f9" : "#e2e8f0", color: sdrPageIndex === pages.length - 1 ? "#cbd5e1" : "#475569", border: "1px solid #cbd5e1", borderRadius: 4, cursor: sdrPageIndex === pages.length - 1 ? "default" : "pointer" }}>Next →</button>
+                      </div>
+                    )}
                     </>
                   );
                 })()}
