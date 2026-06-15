@@ -619,7 +619,12 @@ export default function Dashboard() {
                         <span className="tv-att" style={{ color: bc }}>{att}%</span>
                         <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#dc2626" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
                       </div>
-                      <div className="tv-footer" style={{ justifyContent: "space-between" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "#64748b", marginTop: 8 }}>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}><span>Pipeline:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.pipeline)}</span></div>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}><span>Best Case:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.bestCase)}</span></div>
+                        <div style={{ display: "flex", justifyContent: "space-between" }}><span>Commit:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.commit)}</span></div>
+                      </div>
+                      <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: 8 }}>
                         <StatusPill status={st} compact />
                         {ae.deals?.length > 0 && (
                           <span onClick={() => setExpanded(ex ? null : `ae-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
