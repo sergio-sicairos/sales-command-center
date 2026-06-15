@@ -37,7 +37,7 @@ export async function GET(request) {
     `);
 
     const pipeline = await soql(`
-      SELECT Owner.Name, Name, Opportunity_ARR__c, Best_Case__c, Commit__c, StageName, CloseDate
+      SELECT Owner.Name, Name, Opportunity_ARR__c, Forecast_Category__c, StageName, CloseDate
       FROM Opportunity
       WHERE Type = 'New Business'
         AND StageName NOT IN ('Closed Won', 'Closed Lost')
@@ -97,9 +97,11 @@ export async function GET(request) {
     for (const opp of pipeline) {
       const ownerName = opp.Owner?.Name;
       if (!ownerName || !rosterSet.has(ownerName)) continue;
-      aeMap[ownerName].pipeline += opp.Opportunity_ARR__c || 0;
-      aeMap[ownerName].bestCase += opp.Best_Case__c || 0;
-      aeMap[ownerName].commit += opp.Commit__c || 0;
+      const category = opp.Forecast_Category__c;
+      const arr = opp.Opportunity_ARR__c || 0;
+      if (category === 'Pipeline') aeMap[ownerName].pipeline += arr;
+      else if (category === 'Best Case') aeMap[ownerName].bestCase += arr;
+      else if (category === 'Commit') aeMap[ownerName].commit += arr;
       aeMap[ownerName].pipeCnt++;
     }
 
