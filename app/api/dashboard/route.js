@@ -40,7 +40,8 @@ export async function GET(request) {
       SELECT Owner.Name, Name, Opportunity_ARR__c
       FROM Opportunity
       WHERE Type = 'New Business'
-        AND StageName = '1. Pipeline'
+        AND ForecastCategoryName = 'Pipeline'
+        AND StageName NOT IN ('Closed Won', 'Closed Lost')
       ORDER BY Opportunity_ARR__c DESC
     `);
 
