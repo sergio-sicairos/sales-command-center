@@ -627,7 +627,7 @@ export default function Dashboard() {
                           const expectedLandAtt = q > 0 ? Math.round(((ae.closed + ae.commit) / q) * 100) : (ae.closed + ae.commit > 0 ? 100 : 0);
                           const expectedLandColor = attColor(expectedLandAtt);
                           return (
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", background: "rgba(168, 85, 247, 0.12)", borderRadius: 6, border: "1.5px solid #a855f7", marginTop: 4 }}><span style={{ fontWeight: 600, color: "#cbd5e1" }}>Expected Land:</span><div style={{ display: "flex", alignItems: "baseline", gap: 4 }}><span style={{ fontWeight: 800, color: "#fff", fontSize: 15 }}>{fmt(ae.closed + ae.commit)}</span><span style={{ fontWeight: 600, color: "#94a3b8", fontSize: 12 }}>/</span><span style={{ fontWeight: 700, color: expectedLandColor, fontSize: 12 }}>{expectedLandAtt}%</span></div></div>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 10px", background: "rgba(88, 101, 242, 0.1)", borderRadius: 6, border: "1.5px solid #5865f2", marginTop: 4 }}><span style={{ fontWeight: 600, color: "#cbd5e1" }}>Expected Land:</span><div style={{ display: "flex", alignItems: "baseline", gap: 4 }}><span style={{ fontWeight: 800, color: "#fff", fontSize: 15 }}>{fmt(ae.closed + ae.commit)}</span><span style={{ fontWeight: 600, color: "#94a3b8", fontSize: 12 }}>/</span><span style={{ fontWeight: 700, color: expectedLandColor, fontSize: 12 }}>{expectedLandAtt}%</span></div></div>
                           );
                         })()}
                       </div>
