@@ -623,7 +623,7 @@ export default function Dashboard() {
                         <div style={{ display: "flex", justifyContent: "space-between" }}><span>Open Pipeline:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.openPipeline)}</span></div>
                         <div style={{ display: "flex", justifyContent: "space-between" }}><span>Best Case:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.bestCase)}</span></div>
                         <div style={{ display: "flex", justifyContent: "space-between" }}><span>Commit:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.commit)}</span></div>
-                        <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 10px", background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)", borderRadius: 6, border: "1.5px solid #0284c7", marginTop: 4 }}><span style={{ fontWeight: 600, color: "#0c4a6e" }}>Expected Land:</span><span style={{ fontWeight: 700, color: "#0c4a6e", fontSize: 13 }}>{fmt(ae.closed + ae.commit)}</span></div>
+                        <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 10px", background: "linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)", borderRadius: 6, border: "1.5px solid #0284c7", marginTop: 4 }}><span style={{ fontWeight: 600, color: "#0c4a6e" }}>Expected Land:</span><span style={{ fontWeight: 700, color: "#0c4a6e", fontSize: 13 }}>{fmt(ae.closed + ae.commit)} / {q > 0 ? Math.round(((ae.closed + ae.commit) / q) * 100) : (ae.closed + ae.commit > 0 ? 100 : 0)}%</span></div>
                       </div>
                       <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: 8 }}>
                         <StatusPill status={st} compact />
