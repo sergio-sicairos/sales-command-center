@@ -36,11 +36,22 @@ export async function GET(request) {
       ORDER BY Opportunity_ARR__c DESC
     `);
 
-    const pipeline = await soql(`
-      SELECT Owner.Name, Name, Opportunity_ARR__c, Forecast_Category__c, StageName, CloseDate
+    const openPipeline = await soql(`
+      SELECT Owner.Name, Name, Opportunity_ARR__c
       FROM Opportunity
       WHERE Type = 'New Business'
-        AND StageName NOT IN ('Closed Won', 'Closed Lost')
+        AND StageName = '1. Pipeline'
+      ORDER BY Opportunity_ARR__c DESC
+    `);
+
+    const pipeline = await soql(`
+      SELECT Owner.Name, Name, Opportunity_ARR__c, ForecastCategoryName, StageName, CloseDate
+      FROM Opportunity
+      WHERE Type = 'New Business'
+        AND StageName NOT IN ('2. Qualified', 'Closed Won', 'Closed Lost')
+        AND (StageName LIKE '3.%' OR StageName LIKE '4.%' OR StageName LIKE '5.%')
+        AND CloseDate >= ${monthStart}
+        AND CloseDate < ${nextMonth}
       ORDER BY Opportunity_ARR__c DESC
     `);
 
@@ -78,7 +89,7 @@ export async function GET(request) {
 
     for (const name of rosterNames) {
       const quota = AE_QUOTAS[name] ?? DEFAULT_AE_QUOTA;
-      aeMap[name] = { name, closed: 0, deals: [], cnt: 0, pipeline: 0, pipeCnt: 0, bestCase: 0, commit: 0, quota, gap: quota };
+      aeMap[name] = { name, closed: 0, deals: [], cnt: 0, openPipeline: 0, pipeline: 0, pipeCnt: 0, bestCase: 0, commit: 0, quota, gap: quota };
     }
 
     for (const opp of closedWon) {
@@ -94,10 +105,16 @@ export async function GET(request) {
       });
     }
 
+    for (const opp of openPipeline) {
+      const ownerName = opp.Owner?.Name;
+      if (!ownerName || !rosterSet.has(ownerName)) continue;
+      aeMap[ownerName].openPipeline += opp.Opportunity_ARR__c || 0;
+    }
+
     for (const opp of pipeline) {
       const ownerName = opp.Owner?.Name;
       if (!ownerName || !rosterSet.has(ownerName)) continue;
-      const category = opp.Forecast_Category__c;
+      const category = opp.ForecastCategoryName;
       const arr = opp.Opportunity_ARR__c || 0;
       if (category === 'Pipeline') aeMap[ownerName].pipeline += arr;
       else if (category === 'Best Case') aeMap[ownerName].bestCase += arr;
