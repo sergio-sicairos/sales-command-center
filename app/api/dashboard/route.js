@@ -126,11 +126,11 @@ export async function GET(request) {
           arr: opp.Opportunity_ARR__c || 0,
         });
       } else if (category === 'Commit') {
-        aeMap[ownerName].commit += arr;
         const closeDate = new Date(opp.CloseDate);
         const closeMonth = closeDate.getMonth() + 1;
         const closeQuarter = Math.ceil(closeMonth / 3);
         if (closeQuarter === currentQuarter) {
+          aeMap[ownerName].commit += arr;
           aeMap[ownerName].commitDeals.push({
             name: opp.Name,
             arr: opp.Opportunity_ARR__c || 0,
