@@ -36,7 +36,6 @@ const AVATARS = {
   "Hemal Madaan": "/avatars/hemal-madaan.jpg",
   "Marianna Manolioudaki": "/avatars/marianna-manolioudaki.jpeg",
   "Jaden Welborn": "/avatars/jaden-welborn.jpeg",
-  "Willem Zook": "/avatars/willem-zook.jpeg",
   "Eve Thorsen": "/avatars/eve-thorsen.jpeg",
   "Jack Skerlj": "/avatars/jack-skerlj.jpeg",
   "Wossen Gedib": "/avatars/wossen-gedib.jpeg",
