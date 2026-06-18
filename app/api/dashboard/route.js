@@ -90,7 +90,7 @@ export async function GET(request) {
 
     for (const name of rosterNames) {
       const quota = AE_QUOTAS[name] ?? DEFAULT_AE_QUOTA;
-      aeMap[name] = { name, closed: 0, deals: [], cnt: 0, openPipeline: 0, pipeline: 0, pipeCnt: 0, bestCase: 0, commit: 0, quota, gap: quota };
+      aeMap[name] = { name, closed: 0, deals: [], cnt: 0, openPipeline: 0, pipeline: 0, pipeCnt: 0, bestCase: 0, bestCaseDeals: [], commit: 0, commitDeals: [], quota, gap: quota };
     }
 
     for (const opp of closedWon) {
@@ -117,9 +117,21 @@ export async function GET(request) {
       if (!ownerName || !rosterSet.has(ownerName)) continue;
       const category = opp.ForecastCategoryName;
       const arr = opp.Opportunity_ARR__c || 0;
-      if (category === 'Pipeline') aeMap[ownerName].pipeline += arr;
-      else if (category === 'Best Case') aeMap[ownerName].bestCase += arr;
-      else if (category === 'Commit') aeMap[ownerName].commit += arr;
+      if (category === 'Pipeline') {
+        aeMap[ownerName].pipeline += arr;
+      } else if (category === 'Best Case') {
+        aeMap[ownerName].bestCase += arr;
+        aeMap[ownerName].bestCaseDeals.push({
+          name: opp.Name,
+          arr: opp.Opportunity_ARR__c || 0,
+        });
+      } else if (category === 'Commit') {
+        aeMap[ownerName].commit += arr;
+        aeMap[ownerName].commitDeals.push({
+          name: opp.Name,
+          arr: opp.Opportunity_ARR__c || 0,
+        });
+      }
       aeMap[ownerName].pipeCnt++;
     }
 

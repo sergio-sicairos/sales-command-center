@@ -625,8 +625,39 @@ export default function Dashboard() {
                         <div style={{ display: "flex", justifyContent: "space-between" }}><span>Commit:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.commit)}</span></div>
                         {(() => {
                           const expectedLandAtt = q > 0 ? Math.round(((ae.closed + ae.commit) / q) * 100) : (ae.closed + ae.commit > 0 ? 100 : 0);
+                          const exEl = expanded === `ae-expected-${i}`;
+                          const hasDeals = (ae.bestCaseDeals?.length > 0 || ae.commitDeals?.length > 0);
                           return (
-                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", borderRadius: 6, border: "1px solid #cbd5e1", marginTop: 4 }}><span style={{ fontWeight: 600, color: "#64748b", fontSize: 12 }}>Expected Land</span><div style={{ display: "flex", alignItems: "baseline", gap: 5 }}><span style={{ fontWeight: 800, color: "#0f172a", fontSize: 16 }}>{fmt(ae.closed + ae.commit)}</span><span style={{ fontWeight: 500, color: "#94a3b8", fontSize: 11 }}>/</span><span style={{ fontWeight: 600, color: "#64748b", fontSize: 13 }}>{expectedLandAtt}%</span></div></div>
+                            <div>
+                              <div onClick={() => hasDeals && setExpanded(exEl ? null : `ae-expected-${i}`)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", borderRadius: 6, border: "1px solid #cbd5e1", marginTop: 4, cursor: hasDeals ? "pointer" : "default" }}><span style={{ fontWeight: 600, color: "#64748b", fontSize: 12 }}>Expected Land</span><div style={{ display: "flex", alignItems: "center", gap: 5 }}><span style={{ fontWeight: 800, color: "#0f172a", fontSize: 16 }}>{fmt(ae.closed + ae.commit)}</span><span style={{ fontWeight: 500, color: "#94a3b8", fontSize: 11 }}>/</span><span style={{ fontWeight: 600, color: "#64748b", fontSize: 13 }}>{expectedLandAtt}%</span>{hasDeals && <span style={{ marginLeft: 8, fontSize: 15, color: "#94a3b8", fontWeight: 400 }}>{exEl ? "−" : "+"}</span>}</div></div>
+                              {exEl && hasDeals && (
+                                <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
+                                  {ae.bestCaseDeals?.length > 0 && (
+                                    <>
+                                      <div style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>Best Case</div>
+                                      {ae.bestCaseDeals.sort((a, b) => b.arr - a.arr).map((d, j) => (
+                                        <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
+                                          <span style={{ color: "#3b82f6", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                                        </div>
+                                      ))}
+                                    </>
+                                  )}
+                                  {ae.commitDeals?.length > 0 && (
+                                    <>
+                                      {ae.bestCaseDeals?.length > 0 && <div style={{ height: 1, background: "#f1f5f9", margin: "4px 0" }} />}
+                                      <div style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>Commit</div>
+                                      {ae.commitDeals.sort((a, b) => b.arr - a.arr).map((d, j) => (
+                                        <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
+                                          <span style={{ color: "#8b5cf6", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                                        </div>
+                                      ))}
+                                    </>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           );
                         })()}
                       </div>
