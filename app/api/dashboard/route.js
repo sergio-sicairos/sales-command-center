@@ -51,8 +51,6 @@ export async function GET(request) {
       WHERE Type = 'New Business'
         AND StageName NOT IN ('2. Qualified', 'Closed Won', 'Closed Lost')
         AND (StageName LIKE '3.%' OR StageName LIKE '4.%' OR StageName LIKE '5.%')
-        AND CloseDate >= ${monthStart}
-        AND CloseDate < ${nextMonth}
       ORDER BY Opportunity_ARR__c DESC
     `);
 
