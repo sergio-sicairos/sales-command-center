@@ -120,11 +120,16 @@ export async function GET(request) {
       if (category === 'Pipeline') {
         aeMap[ownerName].pipeline += arr;
       } else if (category === 'Best Case') {
-        aeMap[ownerName].bestCase += arr;
-        aeMap[ownerName].bestCaseDeals.push({
-          name: opp.Name,
-          arr: opp.Opportunity_ARR__c || 0,
-        });
+        const closeDate = new Date(opp.CloseDate);
+        const closeMonth = closeDate.getMonth() + 1;
+        const closeQuarter = Math.ceil(closeMonth / 3);
+        if (closeQuarter === currentQuarter) {
+          aeMap[ownerName].bestCase += arr;
+          aeMap[ownerName].bestCaseDeals.push({
+            name: opp.Name,
+            arr: opp.Opportunity_ARR__c || 0,
+          });
+        }
       } else if (category === 'Commit') {
         const closeDate = new Date(opp.CloseDate);
         const closeMonth = closeDate.getMonth() + 1;
