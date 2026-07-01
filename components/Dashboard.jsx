@@ -322,12 +322,11 @@ export default function Dashboard() {
   const tGap = aeData.reduce((s, a) => s + (a.gap || 0), 0);
   const quotaAEs = aeData.filter((a) => a.quota > 0).length;
   const qHitters = aeData.filter((a) => a.quota > 0 && a.closed >= a.quota).length;
-  const quarterlyGoal = TEAM_GOAL * 3;
-  const teamAtt = quarterlyGoal > 0 ? Math.round((tClosed / quarterlyGoal) * 100) : 0;
-  const teamGap = Math.max(0, quarterlyGoal - tClosed);
-  const teamPaceAmt = Math.round(quarterlyGoal * quarterPace);
+  const teamAtt = TEAM_GOAL > 0 ? Math.round((tClosed / TEAM_GOAL) * 100) : 0;
+  const teamGap = Math.max(0, TEAM_GOAL - tClosed);
+  const teamPaceAmt = Math.round(TEAM_GOAL * quarterPace);
   const teamPaceDiff = tClosed - teamPaceAmt;
-  const teamBarColor = tClosed >= quarterlyGoal ? "#16a34a" : tClosed / quarterlyGoal >= quarterPace ? "#3b82f6" : tClosed / quarterlyGoal >= quarterPace * 0.8 ? "#facc15" : "#dc2626";
+  const teamBarColor = tClosed >= TEAM_GOAL ? "#16a34a" : tClosed / TEAM_GOAL >= quarterPace ? "#3b82f6" : tClosed / TEAM_GOAL >= quarterPace * 0.8 ? "#facc15" : "#dc2626";
   const tBookings = sdrData.reduce((s, a) => s + a.booked, 0);
   const tPending = sdrData.reduce((s, a) => s + a.pending, 0);
   const tQualified = sdrData.reduce((s, a) => s + a.qualified, 0);
@@ -495,7 +494,7 @@ export default function Dashboard() {
                 <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>AE Quarterly Goal - {quarterName} {cy}</div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                   <span style={{ fontSize: isTV ? 26 : 36, fontWeight: 700, color: "#0f172a", letterSpacing: -1, fontFamily: "'DM Sans',sans-serif" }}>{fmtF(tClosed)}</span>
-                  <span style={{ fontSize: isTV ? 13 : 17, color: "#94a3b8", fontWeight: 500 }}>of {fmtF(TEAM_GOAL * 3)}</span>
+                  <span style={{ fontSize: isTV ? 13 : 17, color: "#94a3b8", fontWeight: 500 }}>of {fmtF(TEAM_GOAL)}</span>
                 </div>
               </div>
               <div style={{ display: "flex", gap: isTV ? 20 : 32, alignItems: "flex-start" }}>
