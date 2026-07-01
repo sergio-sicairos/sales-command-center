@@ -478,7 +478,7 @@ export default function Dashboard() {
             <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
-                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>Monthly Team Goal — {cm} {cy}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>AE Team Goal — {cm} {cy}</div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                   <span style={{ fontSize: isTV ? 26 : 36, fontWeight: 700, color: "#0f172a", letterSpacing: -1, fontFamily: "'DM Sans',sans-serif" }}>{fmtF(tClosed)}</span>
                   <span style={{ fontSize: isTV ? 13 : 17, color: "#94a3b8", fontWeight: 500 }}>of {fmtF(TEAM_GOAL)}</span>
