@@ -619,10 +619,7 @@ export default function Dashboard() {
                       <div className="tv-top">
                         <Avatar name={ae.name} size={56} />
                         <div style={{ overflow: "hidden" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <div className="tv-name">{ae.name}</div>
-                            {RAMP_QUOTAS[ae.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
-                          </div>
+                          <div className="tv-name">{ae.name}</div>
                           <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
                         </div>
                       </div>
@@ -677,11 +674,14 @@ export default function Dashboard() {
                           );
                         })()}
                       </div>
-                      <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: 8 }}>
+                      <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: 8, position: "relative" }}>
                         <StatusPill status={st} compact />
-                        {ae.deals?.length > 0 && (
-                          <span onClick={() => setExpanded(ex ? null : `ae-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
-                        )}
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {RAMP_QUOTAS[ae.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
+                          {ae.deals?.length > 0 && (
+                            <span onClick={() => setExpanded(ex ? null : `ae-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
+                          )}
+                        </div>
                       </div>
                       {ex && ae.deals?.length > 0 && (
                         <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
