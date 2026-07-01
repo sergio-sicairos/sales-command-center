@@ -88,17 +88,21 @@ export async function GET(request) {
 
     for (const name of rosterNames) {
       const quota = AE_QUOTAS[name] ?? DEFAULT_AE_QUOTA;
-      aeMap[name] = { name, closed: 0, deals: [], cnt: 0, openPipeline: 0, pipeline: 0, pipeCnt: 0, bestCase: 0, bestCaseDeals: [], commit: 0, commitDeals: [], quota, gap: quota };
+      aeMap[name] = { name, closed: 0, deals: [], cnt: 0, qualityDealsCnt: 0, openPipeline: 0, pipeline: 0, pipeCnt: 0, bestCase: 0, bestCaseDeals: [], commit: 0, commitDeals: [], quota, gap: quota };
     }
 
     for (const opp of closedWon) {
       const ownerName = opp.Owner?.Name;
       if (!ownerName || !rosterSet.has(ownerName)) continue;
-      aeMap[ownerName].closed += opp.Opportunity_ARR__c || 0;
+      const arr = opp.Opportunity_ARR__c || 0;
+      aeMap[ownerName].closed += arr;
       aeMap[ownerName].cnt++;
+      if (arr > 3000) {
+        aeMap[ownerName].qualityDealsCnt++;
+      }
       aeMap[ownerName].deals.push({
         name: opp.Name,
-        arr: opp.Opportunity_ARR__c || 0,
+        arr: arr,
         close: opp.CloseDate,
         lead: opp.LeadSource,
       });

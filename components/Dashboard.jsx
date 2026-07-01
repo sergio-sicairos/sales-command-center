@@ -619,7 +619,13 @@ export default function Dashboard() {
                         <Avatar name={ae.name} size={56} />
                         <div style={{ overflow: "hidden" }}>
                           <div className="tv-name">{ae.name}</div>
-                          <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
+                          <div style={{ display: "flex", gap: 12, fontSize: 11, color: "#94a3b8" }}>
+                            <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                              <span style={{ fontSize: 12, fontWeight: 600, color: "#16a34a" }}>{ae.qualityDealsCnt}</span>
+                              <span style={{ fontSize: 10 }}>quality</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div className="tv-arr">
