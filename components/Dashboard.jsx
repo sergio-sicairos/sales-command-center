@@ -621,7 +621,7 @@ export default function Dashboard() {
                         <div style={{ overflow: "hidden" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                             <div className="tv-name">{ae.name}</div>
-                            {RAMP_QUOTAS[ae.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#94a3b8", background: "#f1f5f9", border: "1px solid #cbd5e1", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
+                            {RAMP_QUOTAS[ae.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
                           </div>
                           <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
                         </div>
