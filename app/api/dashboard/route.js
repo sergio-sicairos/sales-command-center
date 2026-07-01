@@ -1,6 +1,6 @@
 // app/api/dashboard/route.js
 import { soql } from "@/lib/salesforce";
-import { getAEQuotas, getSDRQuotas, getTeamGoal, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_ROSTER, SDR_TEAM_QUOTA, TEAM_GOAL } from "@/lib/constants";
+import { getAEQuotas, getSDRQuotas, getTeamGoal, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_ROSTER, SDR_TEAM_QUOTA, TEAM_GOAL, SALESFORCE_NAME_MAP } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -156,6 +156,12 @@ export async function GET(request) {
       }
     }
 
+    // Create reverse map from Salesforce names to display names
+    const reverseNameMap = {};
+    for (const [displayName, sfName] of Object.entries(SALESFORCE_NAME_MAP)) {
+      reverseNameMap[sfName] = displayName;
+    }
+
     const sdrMap = {};
     for (const name of SDR_ROSTER) {
       const quota = SDR_QUOTAS[name] ?? SDR_MEETING_QUOTA;
@@ -163,7 +169,9 @@ export async function GET(request) {
     }
 
     for (const opp of sdrMeetings) {
-      const sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
+      let sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
+      // Convert Salesforce name to display name if needed
+      sdrName = reverseNameMap[sdrName] || sdrName;
       if (!sdrName || !sdrMap[sdrName]) continue;
       const points = opp.SDR_Points__c || 0;
       sdrMap[sdrName].booked += points;
@@ -179,7 +187,9 @@ export async function GET(request) {
     }
 
     for (const opp of sdrPending) {
-      const sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
+      let sdrName = opp.Manual_Override_SDR_Attributable__r?.Name || opp.Manual_Override_SDR_Attributable__c;
+      // Convert Salesforce name to display name if needed
+      sdrName = reverseNameMap[sdrName] || sdrName;
       if (!sdrName || !sdrMap[sdrName]) continue;
       sdrMap[sdrName].pendingOpps.push({ name: opp.Name, stage: opp.StageName });
     }
