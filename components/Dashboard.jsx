@@ -239,6 +239,18 @@ export default function Dashboard() {
   const pace = monthOffset === 0 ? dom / dim : 1;
   const selectedMonthParam = `${cy}-${String(selectedDate.getMonth() + 1).padStart(2, "0")}`;
 
+  // Calculate quarter info
+  const currentMonth = selectedDate.getMonth() + 1; // 1-12
+  const currentQuarter = Math.ceil(currentMonth / 3);
+  const quarterName = `Q${currentQuarter}`;
+  const quarterStartMonth = (currentQuarter - 1) * 3 + 1;
+  const quarterEndMonth = currentQuarter * 3;
+  const quarterStartDate = new Date(cy, quarterStartMonth - 1, 1);
+  const quarterEndDate = new Date(cy, quarterEndMonth, 0);
+  const daysInQuarter = Math.ceil((quarterEndDate - quarterStartDate) / (1000 * 60 * 60 * 24)) + 1;
+  const currentDayOfQuarter = monthOffset === 0 ? Math.ceil((now - quarterStartDate) / (1000 * 60 * 60 * 24)) + 1 : daysInQuarter;
+  const quarterPace = monthOffset === 0 ? currentDayOfQuarter / daysInQuarter : 1;
+
   const load = useCallback(async () => {
     setLoading(true); setError(null);
     try {
@@ -309,11 +321,12 @@ export default function Dashboard() {
   const tGap = aeData.reduce((s, a) => s + (a.gap || 0), 0);
   const quotaAEs = aeData.filter((a) => a.quota > 0).length;
   const qHitters = aeData.filter((a) => a.quota > 0 && a.closed >= a.quota).length;
-  const teamAtt = TEAM_GOAL > 0 ? Math.round((tClosed / TEAM_GOAL) * 100) : 0;
-  const teamGap = Math.max(0, TEAM_GOAL - tClosed);
-  const teamPaceAmt = Math.round(TEAM_GOAL * pace);
+  const quarterlyGoal = TEAM_GOAL * 3;
+  const teamAtt = quarterlyGoal > 0 ? Math.round((tClosed / quarterlyGoal) * 100) : 0;
+  const teamGap = Math.max(0, quarterlyGoal - tClosed);
+  const teamPaceAmt = Math.round(quarterlyGoal * quarterPace);
   const teamPaceDiff = tClosed - teamPaceAmt;
-  const teamBarColor = tClosed >= TEAM_GOAL ? "#16a34a" : tClosed / TEAM_GOAL >= pace ? "#3b82f6" : tClosed / TEAM_GOAL >= pace * 0.8 ? "#facc15" : "#dc2626";
+  const teamBarColor = tClosed >= quarterlyGoal ? "#16a34a" : tClosed / quarterlyGoal >= quarterPace ? "#3b82f6" : tClosed / quarterlyGoal >= quarterPace * 0.8 ? "#facc15" : "#dc2626";
   const tBookings = sdrData.reduce((s, a) => s + a.booked, 0);
   const tPending = sdrData.reduce((s, a) => s + a.pending, 0);
   const tQualified = sdrData.reduce((s, a) => s + a.qualified, 0);
@@ -454,8 +467,8 @@ export default function Dashboard() {
         {/* HEADER */}
         <div className="hdr">
           <div>
-            <h1>{tab === "sdr" ? "SDR Performance" : "AE Performance"} — {cm} {cy}</h1>
-            <div className="sub">Day {dom} of {dim} · {Math.round(pace * 100)}% through month</div>
+            <h1>{tab === "sdr" ? "SDR Performance — " + cm + " " + cy : `AE Performance - ${quarterName} ${cy}`}</h1>
+            <div className="sub">{tab === "sdr" ? `Day ${dom} of ${dim} · ${Math.round(pace * 100)}% through month` : `Day ${currentDayOfQuarter} of ${daysInQuarter} · ${Math.round(quarterPace * 100)}% through ${quarterName}`}</div>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <button className={`rb ${monthOffset === -1 ? "active" : ""}`} onClick={() => { setMonthOffset((p) => p === 0 ? -1 : 0); setData(null); setExpanded(null); }}>{monthOffset === -1 ? "← This Month" : "Last Month"}</button>
@@ -478,10 +491,10 @@ export default function Dashboard() {
             <div style={{ flex: 1, background: "#faf8f5", border: "1px solid #e8e3db", borderRadius: 14, padding: isTV ? "18px 24px" : "26px 32px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 18 }}>
               <div>
-                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>AE Team Goal — {cm} {cy}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1.4, color: "#94a3b8", marginBottom: 8 }}>AE Quarterly Goal - {quarterName} {cy}</div>
                 <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
                   <span style={{ fontSize: isTV ? 26 : 36, fontWeight: 700, color: "#0f172a", letterSpacing: -1, fontFamily: "'DM Sans',sans-serif" }}>{fmtF(tClosed)}</span>
-                  <span style={{ fontSize: isTV ? 13 : 17, color: "#94a3b8", fontWeight: 500 }}>of {fmtF(TEAM_GOAL)}</span>
+                  <span style={{ fontSize: isTV ? 13 : 17, color: "#94a3b8", fontWeight: 500 }}>of {fmtF(TEAM_GOAL * 3)}</span>
                 </div>
               </div>
               <div style={{ display: "flex", gap: isTV ? 20 : 32, alignItems: "flex-start" }}>
@@ -497,7 +510,7 @@ export default function Dashboard() {
             </div>
             <div style={{ position: "relative", width: "100%", height: 10, borderRadius: 5, background: "#ede9e3", marginBottom: 14 }}>
               <div style={{ width: `${Math.min(teamAtt, 100)}%`, height: "100%", borderRadius: 5, background: teamBarColor, transition: "width 0.8s ease" }} />
-              <div style={{ position: "absolute", top: -4, left: `${Math.min(pace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 18, background: "#cbd5e1", borderRadius: 1 }} title="Month pace" />
+              <div style={{ position: "absolute", top: -4, left: `${Math.min(quarterPace * 100, 100)}%`, transform: "translateX(-50%)", width: 2, height: 18, background: "#cbd5e1", borderRadius: 1 }} title="Quarter pace" />
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", gap: 24 }}>
@@ -505,7 +518,7 @@ export default function Dashboard() {
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtF(teamPaceAmt)}</span></div>
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{qHitters}/{quotaAEs} reps</span></div>
               </div>
-              <div style={{ fontSize: 11, color: "#94a3b8" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
+              <div style={{ fontSize: 11, color: "#94a3b8" }}>{tab === "sdr" ? `Day ${dom} / ${dim} · ${Math.round(pace * 100)}% through month` : `Day ${currentDayOfQuarter} / ${daysInQuarter} · ${Math.round(quarterPace * 100)}% through ${quarterName}`}</div>
             </div>
             </div>
             {(() => {
@@ -560,7 +573,7 @@ export default function Dashboard() {
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtPts(parseFloat(sdrTeamPaceAmt.toFixed(1)))}</span></div>
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{sdrQuotaHitters}/{sdrWithQuota} SDRs</span></div>
               </div>
-              <div style={{ fontSize: 11, color: "#94a3b8" }}>Day {dom} / {dim} · {Math.round(pace * 100)}% through month</div>
+              <div style={{ fontSize: 11, color: "#94a3b8" }}>{tab === "sdr" ? `Day ${dom} / ${dim} · ${Math.round(pace * 100)}% through month` : `Day ${currentDayOfQuarter} / ${daysInQuarter} · ${Math.round(quarterPace * 100)}% through ${quarterName}`}</div>
             </div>
             </div>
             {(() => {
