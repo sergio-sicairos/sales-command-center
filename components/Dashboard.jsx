@@ -314,6 +314,7 @@ export default function Dashboard() {
   const SDR_QUOTA = data?.config?.SDR_MEETING_QUOTA || 10;
   const SDR_TEAM_GOAL = data?.config?.SDR_TEAM_QUOTA || 105;
   const TEAM_GOAL = data?.config?.TEAM_GOAL || 1900000;
+  const RAMP_QUOTAS = data?.config?.RAMP_QUOTAS || {};
   const meta = data?.meta || {};
   const tClosed = aeData.reduce((s, a) => s + a.closed, 0);
   const tDeals = aeData.reduce((s, a) => s + a.cnt, 0);
@@ -618,7 +619,10 @@ export default function Dashboard() {
                       <div className="tv-top">
                         <Avatar name={ae.name} size={56} />
                         <div style={{ overflow: "hidden" }}>
-                          <div className="tv-name">{ae.name}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div className="tv-name">{ae.name}</div>
+                            {RAMP_QUOTAS[ae.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#94a3b8", background: "#f1f5f9", border: "1px solid #cbd5e1", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
+                          </div>
                           <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
                         </div>
                       </div>

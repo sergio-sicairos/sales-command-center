@@ -1,6 +1,6 @@
 // app/api/dashboard/route.js
 import { soql } from "@/lib/salesforce";
-import { getAEQuotas, getSDRQuotas, getTeamGoal, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_ROSTER, SDR_TEAM_QUOTA, TEAM_GOAL, SALESFORCE_NAME_MAP } from "@/lib/constants";
+import { getAEQuotas, getSDRQuotas, getTeamGoal, DEFAULT_AE_QUOTA, SDR_MEETING_QUOTA, SDR_ROSTER, SDR_TEAM_QUOTA, TEAM_GOAL, SALESFORCE_NAME_MAP, RAMP_QUOTAS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -202,7 +202,7 @@ export async function GET(request) {
       aeData,
       sdrData,
       companyArr,
-      config: { AE_QUOTAS, SDR_MEETING_QUOTA, SDR_TEAM_QUOTA, TEAM_GOAL: monthTeamGoal },
+      config: { AE_QUOTAS, SDR_MEETING_QUOTA, SDR_TEAM_QUOTA, TEAM_GOAL: monthTeamGoal, RAMP_QUOTAS },
       meta: {
         month: `${year}-${month}`,
         closedCount: closedWon.length,
