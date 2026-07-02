@@ -730,7 +730,10 @@ export default function Dashboard() {
                       <div className="tv-top">
                         <Avatar name={s.name} size={56} />
                         <div style={{ overflow: "hidden" }}>
-                          <div className="tv-name">{s.name}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                            <div className="tv-name">{s.name}</div>
+                            {RAMP_QUOTAS[s.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
+                          </div>
                           <div className="tv-deals">{fmtPts(s.booked)} meeting{s.booked !== 1 ? "s" : ""}</div>
                         </div>
                       </div>
