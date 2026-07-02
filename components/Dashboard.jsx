@@ -41,7 +41,7 @@ const AVATARS = {
   "Wossen Gedib": "/avatars/wossen-gedib.jpeg",
   "Donovan Swan": "/avatars/donovan-swan.jpeg",
   "Tyler Parod": "/avatars/tyler-parod.jpeg",
-  "Izzy Weiss": "/avatars/izzy-weiss.jpeg",
+  "Izzy Weiss": "/avatars/isabel-weiss.jpeg",
   "Shwetha Rajmohan": "/avatars/shwetha-rajmohan.png",
 };
 
