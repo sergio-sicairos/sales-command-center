@@ -528,7 +528,7 @@ export default function Dashboard() {
               /* ---- AE TV GRID ---- */
               <div>
                 {(() => {
-                  const itemsPerPage = 15; // 5 columns × 3 rows
+                  const itemsPerPage = 10;
                   const pages = [];
                   for (let i = 0; i < aeData.length; i += itemsPerPage) {
                     pages.push(aeData.slice(i, i + itemsPerPage));
