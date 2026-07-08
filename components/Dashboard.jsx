@@ -141,6 +141,7 @@ export default function Dashboard() {
   const [tvScale, setTvScale] = useState(1);
   const [loopMode, setLoopMode] = useState(false);
   const [monthOffset, setMonthOffset] = useState(0);
+  const [aePageIndex, setAEPageIndex] = useState(0);
   const [sdrPageIndex, setSdrPageIndex] = useState(0);
 
   useEffect(() => { const t = setInterval(() => setTime(new Date()), 1000); return () => clearInterval(t); }, []);
@@ -193,21 +194,18 @@ export default function Dashboard() {
     let elapsedTime = 0;
     const interval = setInterval(() => {
       elapsedTime += 30000; // Check every 30 seconds
-      const cycleTime = elapsedTime % 240000; // 240s cycle: 60s AE + 30s*3 SDR pages + 30s
+      const cycleTime = elapsedTime % 120000; // 120s cycle: 30s AE page 1 + 30s AE page 2 + 30s SDR page 1 + 30s SDR page 2
 
-      if (cycleTime < 60000) { // AE for 60s
+      if (cycleTime < 30000) { // AE page 1 for 30s
         setTab("ae");
-        setSdrPageIndex(0);
-      } else if (cycleTime < 90000) { // SDR page 0 for 30s
+        setAEPageIndex(0);
+      } else if (cycleTime < 60000) { // AE page 2 for 30s
+        setTab("ae");
+        setAEPageIndex(1);
+      } else if (cycleTime < 90000) { // SDR page 1 for 30s
         setTab("sdr");
         setSdrPageIndex(0);
-      } else if (cycleTime < 120000) { // SDR page 1 for 30s
-        setTab("sdr");
-        setSdrPageIndex(1);
-      } else if (cycleTime < 150000) { // SDR page 0 again for 30s
-        setTab("sdr");
-        setSdrPageIndex(0);
-      } else { // SDR page 1 again for 30s
+      } else { // SDR page 2 for 30s
         setTab("sdr");
         setSdrPageIndex(1);
       }
@@ -530,104 +528,126 @@ export default function Dashboard() {
 
             {tab === "ae" ? (
               /* ---- AE TV GRID ---- */
-              <div className="tv-grid">
-                {aeData.map((ae, i) => {
-                  const q = ae.quota || 0;
-                  const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
-                  const st = getStatus(ae.closed, q);
-                  const bc = attColor(att);
-                  const gapVal = ae.gap || 0;
-                  const ex = expanded === `ae-${i}`;
+              <div>
+                {(() => {
+                  const itemsPerPage = 15; // 5 columns × 3 rows
+                  const pages = [];
+                  for (let i = 0; i < aeData.length; i += itemsPerPage) {
+                    pages.push(aeData.slice(i, i + itemsPerPage));
+                  }
+                  const currentPage = pages[aePageIndex] || [];
                   return (
-                    <div className="tv-card" key={ae.name}>
-                      <span className="tv-rank">#{i + 1}</span>
-                      <div className="tv-top">
-                        <Avatar name={ae.name} size={56} />
-                        <div style={{ overflow: "hidden" }}>
-                          <div className="tv-name">{ae.name}</div>
-                          <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", alignItems: "center" }}>
-                            <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
-                            <span>|</span>
-                            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                              <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>{ae.qualityDealsCnt}</span>
-                              <span style={{ fontSize: 10 }}>quality deals</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="tv-arr">
-                        <span className="tv-arr-val">{fmtF(Math.round(ae.closed))}</span>
-                        <span className="tv-arr-of">of {q > 0 ? fmt(q) : "$0"}</span>
-                      </div>
-                      <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={5} />
-                      <div className="tv-stats">
-                        <span className="tv-att" style={{ color: bc }}>{att}%</span>
-                        <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#dc2626" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "#64748b", marginTop: 8 }}>
-                        <div style={{ display: "flex", justifyContent: "space-between" }}><span>Open Pipeline:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.openPipeline)}</span></div>
-                        <div style={{ display: "flex", justifyContent: "space-between" }}><span>Best Case:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.bestCase)}</span></div>
-                        <div style={{ display: "flex", justifyContent: "space-between" }}><span>Commit:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.commit)}</span></div>
-                        {(() => {
-                          const expectedLandAtt = q > 0 ? Math.round(((ae.closed + ae.commit) / q) * 100) : (ae.closed + ae.commit > 0 ? 100 : 0);
-                          const exEl = expanded === `ae-expected-${i}`;
-                          const hasDeals = (ae.bestCaseDeals?.length > 0 || ae.commitDeals?.length > 0);
-                          return (
-                            <div>
-                              <div onClick={() => hasDeals && setExpanded(exEl ? null : `ae-expected-${i}`)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", borderRadius: 6, border: "1px solid #cbd5e1", marginTop: 4, cursor: hasDeals ? "pointer" : "default", flexWrap: "nowrap", minHeight: 40 }}><span style={{ fontWeight: 600, color: "#64748b", fontSize: 12, flexShrink: 0 }}>Expected Land</span><div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}><span style={{ fontWeight: 800, color: "#0f172a", fontSize: 13, whiteSpace: "nowrap" }}>{fmt(ae.closed + ae.commit)}</span><span style={{ fontWeight: 500, color: "#94a3b8", fontSize: 11 }}>/</span><span style={{ fontWeight: 600, color: "#64748b", fontSize: 11, whiteSpace: "nowrap" }}>{expectedLandAtt}%</span>{hasDeals && <span style={{ marginLeft: 8, fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0 }}>{exEl ? "−" : "+"}</span>}</div></div>
-                              {exEl && hasDeals && (
-                                <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
-                                  {ae.bestCaseDeals?.length > 0 && (
-                                    <>
-                                      <div style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>Best Case</div>
-                                      {ae.bestCaseDeals.sort((a, b) => b.arr - a.arr).map((d, j) => (
-                                        <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
-                                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
-                                          <span style={{ color: "#3b82f6", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
-                                        </div>
-                                      ))}
-                                    </>
-                                  )}
-                                  {ae.commitDeals?.length > 0 && (
-                                    <>
-                                      {ae.bestCaseDeals?.length > 0 && <div style={{ height: 1, background: "#f1f5f9", margin: "4px 0" }} />}
-                                      <div style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>Commit</div>
-                                      {ae.commitDeals.sort((a, b) => b.arr - a.arr).map((d, j) => (
-                                        <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
-                                          <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
-                                          <span style={{ color: "#8b5cf6", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
-                                        </div>
-                                      ))}
-                                    </>
-                                  )}
+                    <>
+                    <div className="tv-grid">
+                      {currentPage.map((ae, i) => {
+                        const actualIndex = aePageIndex * itemsPerPage + i;
+                        const q = ae.quota || 0;
+                        const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
+                        const st = getStatus(ae.closed, q);
+                        const bc = attColor(att);
+                        const gapVal = ae.gap || 0;
+                        const ex = expanded === `ae-${actualIndex}`;
+                        return (
+                          <div className="tv-card" key={ae.name}>
+                            <span className="tv-rank">#{actualIndex + 1}</span>
+                            <div className="tv-top">
+                              <Avatar name={ae.name} size={56} />
+                              <div style={{ overflow: "hidden" }}>
+                                <div className="tv-name">{ae.name}</div>
+                                <div style={{ display: "flex", gap: 8, fontSize: 11, color: "#94a3b8", alignItems: "center" }}>
+                                  <div className="tv-deals">{ae.cnt} deal{ae.cnt !== 1 ? "s" : ""}</div>
+                                  <span>|</span>
+                                  <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                                    <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b" }}>{ae.qualityDealsCnt}</span>
+                                    <span style={{ fontSize: 10 }}>quality deals</span>
+                                  </div>
                                 </div>
-                              )}
+                              </div>
                             </div>
-                          );
-                        })()}
-                      </div>
-                      <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: 8, position: "relative" }}>
-                        <StatusPill status={st} compact />
-                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          {RAMP_QUOTAS[ae.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
-                          {ae.deals?.length > 0 && (
-                            <span onClick={() => setExpanded(ex ? null : `ae-${i}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
-                          )}
-                        </div>
-                      </div>
-                      {ex && ae.deals?.length > 0 && (
-                        <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
-                          {ae.deals.sort((a, b) => b.arr - a.arr).map((d, j) => (
-                            <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
-                              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
-                              <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                            <div className="tv-arr">
+                              <span className="tv-arr-val">{fmtF(Math.round(ae.closed))}</span>
+                              <span className="tv-arr-of">of {q > 0 ? fmt(q) : "$0"}</span>
                             </div>
-                          ))}
-                        </div>
-                      )}
+                            <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={5} />
+                            <div className="tv-stats">
+                              <span className="tv-att" style={{ color: bc }}>{att}%</span>
+                              <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#dc2626" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "#64748b", marginTop: 8 }}>
+                              <div style={{ display: "flex", justifyContent: "space-between" }}><span>Open Pipeline:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.openPipeline)}</span></div>
+                              <div style={{ display: "flex", justifyContent: "space-between" }}><span>Best Case:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.bestCase)}</span></div>
+                              <div style={{ display: "flex", justifyContent: "space-between" }}><span>Commit:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.commit)}</span></div>
+                              {(() => {
+                                const expectedLandAtt = q > 0 ? Math.round(((ae.closed + ae.commit) / q) * 100) : (ae.closed + ae.commit > 0 ? 100 : 0);
+                                const exEl = expanded === `ae-expected-${actualIndex}`;
+                                const hasDeals = (ae.bestCaseDeals?.length > 0 || ae.commitDeals?.length > 0);
+                                return (
+                                  <div>
+                                    <div onClick={() => hasDeals && setExpanded(exEl ? null : `ae-expected-${actualIndex}`)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)", borderRadius: 6, border: "1px solid #cbd5e1", marginTop: 4, cursor: hasDeals ? "pointer" : "default", flexWrap: "nowrap", minHeight: 40 }}><span style={{ fontWeight: 600, color: "#64748b", fontSize: 12, flexShrink: 0 }}>Expected Land</span><div style={{ display: "flex", alignItems: "center", gap: 5, flexShrink: 0 }}><span style={{ fontWeight: 800, color: "#0f172a", fontSize: 13, whiteSpace: "nowrap" }}>{fmt(ae.closed + ae.commit)}</span><span style={{ fontWeight: 500, color: "#94a3b8", fontSize: 11 }}>/</span><span style={{ fontWeight: 600, color: "#64748b", fontSize: 11, whiteSpace: "nowrap" }}>{expectedLandAtt}%</span>{hasDeals && <span style={{ marginLeft: 8, fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0 }}>{exEl ? "−" : "+"}</span>}</div></div>
+                                    {exEl && hasDeals && (
+                                      <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
+                                        {ae.bestCaseDeals?.length > 0 && (
+                                          <>
+                                            <div style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>Best Case</div>
+                                            {ae.bestCaseDeals.sort((a, b) => b.arr - a.arr).map((d, j) => (
+                                              <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                                                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
+                                                <span style={{ color: "#3b82f6", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                                              </div>
+                                            ))}
+                                          </>
+                                        )}
+                                        {ae.commitDeals?.length > 0 && (
+                                          <>
+                                            {ae.bestCaseDeals?.length > 0 && <div style={{ height: 1, background: "#f1f5f9", margin: "4px 0" }} />}
+                                            <div style={{ fontSize: 10, fontWeight: 600, color: "#94a3b8", textTransform: "uppercase" }}>Commit</div>
+                                            {ae.commitDeals.sort((a, b) => b.arr - a.arr).map((d, j) => (
+                                              <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                                                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
+                                                <span style={{ color: "#8b5cf6", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                                              </div>
+                                            ))}
+                                          </>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              })()}
+                            </div>
+                            <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: 8, position: "relative" }}>
+                              <StatusPill status={st} compact />
+                              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                                {RAMP_QUOTAS[ae.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
+                                {ae.deals?.length > 0 && (
+                                  <span onClick={() => setExpanded(ex ? null : `ae-${actualIndex}`)} style={{ width: 22, height: 22, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
+                                )}
+                              </div>
+                            </div>
+                            {ex && ae.deals?.length > 0 && (
+                              <div style={{ borderTop: "1px solid #f1f5f9", paddingTop: 10, marginTop: 2, display: "flex", flexDirection: "column", gap: 5 }}>
+                                {ae.deals.sort((a, b) => b.arr - a.arr).map((d, j) => (
+                                  <div key={j} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 11, color: "#64748b" }}>
+                                    <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "65%" }}>{d.name.length > 24 ? d.name.slice(0, 24) + "…" : d.name}</span>
+                                    <span style={{ color: "#16a34a", fontWeight: 600, flexShrink: 0 }}>{fmt(d.arr)}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
+                    {pages.length > 1 && (
+                      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 12, marginTop: 16 }}>
+                        <button onClick={() => setAEPageIndex(Math.max(0, aePageIndex - 1))} disabled={aePageIndex === 0} style={{ padding: "6px 12px", fontSize: 12, background: aePageIndex === 0 ? "#f1f5f9" : "#e2e8f0", color: aePageIndex === 0 ? "#cbd5e1" : "#475569", border: "1px solid #cbd5e1", borderRadius: 4, cursor: aePageIndex === 0 ? "default" : "pointer" }}>← Previous</button>
+                        <span style={{ fontSize: 11, color: "#94a3b8" }}>Page {aePageIndex + 1} of {pages.length}</span>
+                        <button onClick={() => setAEPageIndex(Math.min(pages.length - 1, aePageIndex + 1))} disabled={aePageIndex === pages.length - 1} style={{ padding: "6px 12px", fontSize: 12, background: aePageIndex === pages.length - 1 ? "#f1f5f9" : "#e2e8f0", color: aePageIndex === pages.length - 1 ? "#cbd5e1" : "#475569", border: "1px solid #cbd5e1", borderRadius: 4, cursor: aePageIndex === pages.length - 1 ? "default" : "pointer" }}>Next →</button>
+                      </div>
+                    )}
+                    </>
                   );
-                })}
+                })()}
               </div>
             ) : (
               /* ---- SDR TV GRID ---- */
