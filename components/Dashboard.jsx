@@ -88,12 +88,12 @@ function Avatar({ name, size = 42 }) {
 function StatusPill({ status, compact = false }) {
   const c = {
     hit: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a", label: "Hit Quota ✓" },
-    above: { bg: "#fef9c3", border: "#fef08a", color: "#a16207", label: "On Pace" },
+    above: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a", label: "On Pace" },
     on: { bg: "#fef9c3", border: "#fef08a", color: "#a16207", label: "Tracking" },
-    behind: { bg: "#fef2f2", border: "#fecaca", color: "#dc2626", label: "Behind" },
+    behind: { bg: "#fed7aa", border: "#fdba74", color: "#ea580c", label: "Behind" },
     surplus: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a", label: "Hit Quota ✓" },
     neutral: { bg: "#f1f5f9", border: "#e2e8f0", color: "#94a3b8", label: "No Quota" },
-  }[status] || { bg: "#fef2f2", border: "#fecaca", color: "#dc2626", label: "Behind" };
+  }[status] || { bg: "#fed7aa", border: "#fdba74", color: "#ea580c", label: "Behind" };
   return (
     <span style={{ display: "inline-flex", alignItems: "center", gap: compact ? 4 : 6, padding: compact ? "3px 10px" : "5px 14px", borderRadius: 20, background: c.bg, border: `1px solid ${c.border}`, fontSize: compact ? 10 : 12, fontWeight: 500, color: c.color, whiteSpace: "nowrap" }}>
       <span style={{ width: compact ? 5 : 6, height: compact ? 5 : 6, borderRadius: "50%", background: c.color }} />{c.label}
