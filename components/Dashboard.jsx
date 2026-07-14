@@ -675,10 +675,7 @@ export default function Dashboard() {
                       <div className="tv-top">
                         <Avatar name={s.name} size={56} />
                         <div style={{ overflow: "hidden" }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                            <div className="tv-name">{s.name}</div>
-                            {RAMP_QUOTAS[s.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
-                          </div>
+                          <div className="tv-name">{s.name}</div>
                           <div className="tv-deals">{fmtPts(s.booked)} meeting{s.booked !== 1 ? "s" : ""}</div>
                         </div>
                       </div>
@@ -693,9 +690,12 @@ export default function Dashboard() {
                       </div>
                       <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: "auto" }}>
                         <StatusPill status={st} compact />
-                        {s.opps?.length > 0 && (
-                          <span onClick={() => setExpanded(ex ? null : `sdr-tv-${i}`)} style={{ width: 18, height: 18, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
-                        )}
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {RAMP_QUOTAS[s.name] && <span style={{ fontSize: 9, fontWeight: 600, color: "#fff", background: "#3b82f6", border: "1px solid #2563eb", padding: "2px 6px", borderRadius: 3, textTransform: "uppercase", letterSpacing: 0.5, flexShrink: 0 }}>Ramp</span>}
+                          {s.opps?.length > 0 && (
+                            <span onClick={() => setExpanded(ex ? null : `sdr-tv-${i}`)} style={{ width: 18, height: 18, borderRadius: "50%", border: "1px solid #e2e8f0", background: "#f8fafc", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#94a3b8", fontWeight: 400, flexShrink: 0, lineHeight: 1, cursor: "pointer" }}>{ex ? "−" : "+"}</span>
+                          )}
+                        </div>
                       </div>
                       {ex && s.opps?.length > 0 && (
                         <div style={{ position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "10px 12px", zIndex: 20, boxShadow: "0 8px 20px rgba(15,23,42,0.12)", display: "flex", flexDirection: "column", gap: 5 }}>
