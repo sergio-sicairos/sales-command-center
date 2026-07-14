@@ -212,11 +212,12 @@ export default function Dashboard() {
   }, [loopMode]);
 
 
-  const getStatus = (v, q) => {
+  const getStatus = (v, q, isAE = false) => {
     if (q === 0) return v > 0 ? "surplus" : "neutral";
     if (v >= q) return "hit";
-    if (v / q >= pace) return "above";
-    if (v / q >= pace * 0.7) return "on";
+    const paceToUse = isAE ? quarterPace : pace;
+    if (v / q >= paceToUse) return "above";
+    if (v / q >= paceToUse * 0.7) return "on";
     return "behind";
   };
 
@@ -541,7 +542,7 @@ export default function Dashboard() {
                         const actualIndex = aePageIndex * itemsPerPage + i;
                         const q = ae.quota || 0;
                         const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
-                        const st = getStatus(ae.closed, q);
+                        const st = getStatus(ae.closed, q, true);
                         const bc = attColor(att);
                         const gapVal = ae.gap || 0;
                         const ex = expanded === `ae-${actualIndex}`;
@@ -740,7 +741,7 @@ export default function Dashboard() {
                 {aeData.map((ae, i) => {
                   const q = ae.quota || 0;
                   const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
-                  const st = getStatus(ae.closed, q);
+                  const st = getStatus(ae.closed, q, true);
                   const bc = attColor(att);
                   const gapVal = ae.gap || 0;
                   const ex = expanded === `ae-${i}`;
