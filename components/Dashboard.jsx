@@ -221,6 +221,14 @@ export default function Dashboard() {
     return "behind";
   };
 
+  const statusColor = (status) => {
+    if (status === "hit" || status === "above") return "#16a34a"; // On Pace - green
+    if (status === "on") return "#a16207"; // Tracking - yellow
+    if (status === "behind") return "#ea580c"; // Behind - orange
+    if (status === "surplus") return "#16a34a"; // Surplus - green
+    return "#94a3b8"; // Neutral - gray
+  };
+
   const attColor = (p) => {
     if (p >= 75) return "#16a34a";
     if (p >= 50) return "#facc15";
@@ -543,7 +551,7 @@ export default function Dashboard() {
                         const q = ae.quota || 0;
                         const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
                         const st = getStatus(ae.closed, q, true);
-                        const bc = attColor(att);
+                        const bc = statusColor(st);
                         const gapVal = ae.gap || 0;
                         const ex = expanded === `ae-${actualIndex}`;
                         return (
@@ -666,7 +674,7 @@ export default function Dashboard() {
                         const sdrQuota = s.quota || SDR_QUOTA;
                         const att = sdrQuota > 0 ? Math.round((s.booked / sdrQuota) * 100) : (s.booked > 0 ? 100 : 0);
                         const st = getStatus(s.booked, sdrQuota);
-                        const bc = attColor(att);
+                        const bc = statusColor(st);
                         const diff = parseFloat((s.booked - sdrQuota * pace).toFixed(1));
                         const ex = expanded === `sdr-tv-${actualIndex}`;
                   return (
@@ -742,7 +750,7 @@ export default function Dashboard() {
                   const q = ae.quota || 0;
                   const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
                   const st = getStatus(ae.closed, q, true);
-                  const bc = attColor(att);
+                  const bc = statusColor(st);
                   const gapVal = ae.gap || 0;
                   const ex = expanded === `ae-${i}`;
                   return (
