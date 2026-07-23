@@ -223,7 +223,7 @@ export default function Dashboard() {
 
   const statusColor = (status) => {
     if (status === "hit" || status === "above") return "#16a34a"; // On Pace - green
-    if (status === "on") return "#a16207"; // Tracking - yellow
+    if (status === "on") return "#eab308"; // Tracking - yellow
     if (status === "behind") return "#ea580c"; // Behind - orange
     if (status === "surplus") return "#16a34a"; // Surplus - green
     return "#94a3b8"; // Neutral - gray
