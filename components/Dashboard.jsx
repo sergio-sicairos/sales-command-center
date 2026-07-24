@@ -550,7 +550,9 @@ export default function Dashboard() {
                     <div className="tv-grid">
                       {currentPage.map((ae, i) => {
                         const actualIndex = aePageIndex * itemsPerPage + i;
-                        const q = ae.quota || 0;
+                        let q = ae.quota || 0;
+                        // Ensure ramp members get correct quarterly quota
+                        if (ae.name === "Chris Voith" && q === 0) q = 150000;
                         const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
                         const st = getStatus(ae.closed, q, true);
                         const bc = statusColor(st);
@@ -749,7 +751,9 @@ export default function Dashboard() {
                   <div className="col-hdr">Account Executive</div><div className="col-hdr">ARR Closed</div><div className="col-hdr">Attainment</div><div className="col-hdr">Gap to Goal</div><div className="col-hdr">Status</div>
                 </div>
                 {aeData.map((ae, i) => {
-                  const q = ae.quota || 0;
+                  let q = ae.quota || 0;
+                  // Ensure ramp members get correct quarterly quota
+                  if (ae.name === "Chris Voith" && q === 0) q = 150000;
                   const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
                   const st = getStatus(ae.closed, q, true);
                   const bc = statusColor(st);
