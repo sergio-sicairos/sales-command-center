@@ -88,7 +88,7 @@ function Avatar({ name, size = 42 }) {
 function StatusPill({ status, compact = false }) {
   const c = {
     hit: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a", label: "Hit Quota ✓" },
-    above: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a", label: "On Pace" },
+    above: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a", label: "Above Pace" },
     on: { bg: "#fef9c3", border: "#fef08a", color: "#a16207", label: "Tracking" },
     behind: { bg: "#fed7aa", border: "#fdba74", color: "#ea580c", label: "Behind" },
     surplus: { bg: "#dcfce7", border: "#bbf7d0", color: "#16a34a", label: "Hit Quota ✓" },
