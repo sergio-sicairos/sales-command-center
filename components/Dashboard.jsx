@@ -551,8 +551,8 @@ export default function Dashboard() {
                       {currentPage.map((ae, i) => {
                         const actualIndex = aePageIndex * itemsPerPage + i;
                         let q = ae.quota || 0;
-                        // Ensure ramp members get correct quarterly quota
-                        if (ae.name === "Chris Voith" && q === 0) q = 150000;
+                        // Force correct quota for Chris Voith
+                        if (ae.name === "Chris Voith") q = 150000;
                         const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
                         const st = getStatus(ae.closed, q, true);
                         const bc = statusColor(st);
@@ -752,8 +752,8 @@ export default function Dashboard() {
                 </div>
                 {aeData.map((ae, i) => {
                   let q = ae.quota || 0;
-                  // Ensure ramp members get correct quarterly quota
-                  if (ae.name === "Chris Voith" && q === 0) q = 150000;
+                  // Force correct quota for Chris Voith
+                  if (ae.name === "Chris Voith") q = 150000;
                   const att = ae.attainment != null ? ae.attainment : (q > 0 ? Math.round((ae.closed / q) * 100) : (ae.closed > 0 ? 100 : 0));
                   const st = getStatus(ae.closed, q, true);
                   const bc = statusColor(st);
