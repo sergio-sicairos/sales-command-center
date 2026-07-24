@@ -259,7 +259,7 @@ export default function Dashboard() {
   const teamGap = Math.max(0, TEAM_GOAL - tClosed);
   const teamPaceAmt = Math.round(TEAM_GOAL * quarterPace);
   const teamPaceDiff = tClosed - teamPaceAmt;
-  const teamBarColor = tClosed >= TEAM_GOAL ? "#16a34a" : tClosed / TEAM_GOAL >= quarterPace ? "#3b82f6" : tClosed / TEAM_GOAL >= quarterPace * 0.8 ? "#facc15" : "#dc2626";
+  const teamBarColor = tClosed >= TEAM_GOAL ? "#16a34a" : tClosed / TEAM_GOAL >= quarterPace ? "#3b82f6" : tClosed / TEAM_GOAL >= quarterPace * 0.8 ? "#facc15" : "#3b82f6";
   const tBookings = sdrData.reduce((s, a) => s + a.booked, 0);
   const tPending = sdrData.reduce((s, a) => s + a.pending, 0);
   const tQualified = sdrData.reduce((s, a) => s + a.qualified, 0);
