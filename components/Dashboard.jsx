@@ -216,8 +216,10 @@ export default function Dashboard() {
     if (q === 0) return v > 0 ? "surplus" : "neutral";
     if (v >= q) return "hit";
     const paceToUse = isAE ? quarterPace : pace;
-    if (v / q >= paceToUse) return "above";
-    if (v / q >= paceToUse * 0.7) return "on";
+    const attainment = v / q;
+    const epsilon = 0.0001; // small tolerance for floating point precision
+    if (attainment >= paceToUse - epsilon) return "above";
+    if (attainment >= paceToUse * 0.7 - epsilon) return "on";
     return "behind";
   };
 
