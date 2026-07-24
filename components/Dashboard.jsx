@@ -267,7 +267,7 @@ export default function Dashboard() {
   const sdrTeamGap = Math.max(0, SDR_TEAM_GOAL - tBookings);
   const sdrTeamPaceAmt = SDR_TEAM_GOAL * pace;
   const sdrTeamPaceDiff = parseFloat((tBookings - sdrTeamPaceAmt).toFixed(1));
-  const sdrTeamBarColor = tBookings >= SDR_TEAM_GOAL ? "#16a34a" : tBookings / SDR_TEAM_GOAL >= pace ? "#3b82f6" : tBookings / SDR_TEAM_GOAL >= pace * 0.8 ? "#facc15" : "#dc2626";
+  const sdrTeamBarColor = tBookings >= SDR_TEAM_GOAL ? "#16a34a" : tBookings / SDR_TEAM_GOAL >= pace ? "#3b82f6" : tBookings / SDR_TEAM_GOAL >= pace * 0.8 ? "#facc15" : "#3b82f6";
   const sdrQuotaHitters = sdrData.filter((s) => s.quota > 0 && s.booked >= s.quota).length;
   const sdrWithQuota = sdrData.filter((s) => s.quota > 0).length;
 
@@ -491,7 +491,7 @@ export default function Dashboard() {
                   <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Attainment</div>
                 </div>
                 <div style={{ textAlign: "center" }}>
-                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: sdrTeamGap === 0 ? "#16a34a" : "#dc2626", letterSpacing: -0.5 }}>{sdrTeamGap === 0 ? "Done!" : `-${fmtPts(sdrTeamGap)}`}</div>
+                  <div style={{ fontSize: isTV ? 24 : 32, fontWeight: 700, color: sdrTeamGap === 0 ? "#16a34a" : "#3b82f6", letterSpacing: -0.5 }}>{sdrTeamGap === 0 ? "Done!" : `-${fmtPts(sdrTeamGap)}`}</div>
                   <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 3, textTransform: "uppercase", letterSpacing: 0.8 }}>Gap</div>
                 </div>
               </div>
@@ -502,7 +502,7 @@ export default function Dashboard() {
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div style={{ display: "flex", gap: 24 }}>
-                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Pace </span><span style={{ fontSize: 13, fontWeight: 600, color: sdrTeamPaceDiff >= 0 ? "#16a34a" : "#dc2626" }}>{sdrTeamPaceDiff >= 0 ? `+${fmtPts(sdrTeamPaceDiff)}` : fmtPts(sdrTeamPaceDiff)}</span></div>
+                <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Pace </span><span style={{ fontSize: 13, fontWeight: 600, color: sdrTeamPaceDiff >= 0 ? "#16a34a" : "#3b82f6" }}>{sdrTeamPaceDiff >= 0 ? `+${fmtPts(sdrTeamPaceDiff)}` : fmtPts(sdrTeamPaceDiff)}</span></div>
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>Expected </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{fmtPts(parseFloat(sdrTeamPaceAmt.toFixed(1)))}</span></div>
                 <div><span style={{ fontSize: 10, color: "#94a3b8", textTransform: "uppercase", letterSpacing: 0.8 }}>At Quota </span><span style={{ fontSize: 13, fontWeight: 600, color: "#64748b" }}>{sdrQuotaHitters}/{sdrWithQuota} SDRs</span></div>
               </div>
