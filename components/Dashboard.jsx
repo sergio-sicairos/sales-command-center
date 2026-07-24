@@ -226,7 +226,7 @@ export default function Dashboard() {
   const statusColor = (status) => {
     if (status === "hit" || status === "above") return "#16a34a"; // On Pace - green
     if (status === "on") return "#fcd34d"; // Tracking - yellow
-    if (status === "behind") return "#ea580c"; // Behind - orange
+    if (status === "behind") return "#3b82f6"; // Behind - blue
     if (status === "surplus") return "#16a34a"; // Surplus - green
     return "#94a3b8"; // Neutral - gray
   };
@@ -582,7 +582,7 @@ export default function Dashboard() {
                             <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={5} />
                             <div className="tv-stats">
                               <span className="tv-att" style={{ color: bc }}>{att}%</span>
-                              <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#000000" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
+                              <span className="tv-gap" style={{ color: bc }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "#64748b", marginTop: 8 }}>
                               <div style={{ display: "flex", justifyContent: "space-between" }}><span>Open Pipeline:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.openPipeline)}</span></div>
@@ -770,7 +770,7 @@ export default function Dashboard() {
                           </div>
                           <div><div style={{ display: "flex", alignItems: "baseline", gap: 5 }}><span className="val">{fmtF(Math.round(ae.closed))}</span><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 400 }}>of {q > 0 ? fmt(q) : "$0"}</span></div><Bar value={ae.closed} max={q || ae.closed || 1} color={bc} /></div>
                           <div><span className="att-val" style={{ color: bc }}>{att}%</span></div>
-                          <div>{gapVal === 0 ? <span className="gap-hit">$0</span> : <span className="gap-miss">-{fmt(gapVal)}</span>}</div>
+                          <div>{gapVal === 0 ? <span className="gap-hit">$0</span> : <span style={{ color: bc, fontWeight: 600 }}>-{fmt(gapVal)}</span>}</div>
                           <div><StatusPill status={st} /></div>
                         </div>
                       </div>
