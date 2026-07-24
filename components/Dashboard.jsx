@@ -582,7 +582,7 @@ export default function Dashboard() {
                             <Bar value={ae.closed} max={q || ae.closed || 1} color={bc} h={5} />
                             <div className="tv-stats">
                               <span className="tv-att" style={{ color: bc }}>{att}%</span>
-                              <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#dc2626" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
+                              <span className="tv-gap" style={{ color: gapVal === 0 ? "#16a34a" : "#000000" }}>{gapVal === 0 ? "$0 gap" : `-${fmt(gapVal)}`}</span>
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 12, color: "#64748b", marginTop: 8 }}>
                               <div style={{ display: "flex", justifyContent: "space-between" }}><span>Open Pipeline:</span><span style={{ fontWeight: 600, color: "#0f172a" }}>{fmt(ae.openPipeline)}</span></div>
@@ -698,7 +698,7 @@ export default function Dashboard() {
                       <Bar value={s.booked} max={sdrQuota || s.booked || 1} color={bc} h={5} />
                       <div className="tv-stats">
                         <span className="tv-att" style={{ color: bc }}>{att}%</span>
-                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
+                        <span className="tv-gap" style={{ color: diff >= 0 ? "#16a34a" : "#000000" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)} vs pace</span>
                       </div>
                       <div className="tv-footer" style={{ justifyContent: "space-between", marginTop: "auto" }}>
                         <StatusPill status={st} compact />
@@ -806,7 +806,7 @@ export default function Dashboard() {
                           <div><span className="val">{fmtPts(s.booked)}</span></div>
                           <div><span className="val-muted">{s.pendingOpps?.length || 0}</span></div>
                           <div><span className="val">{fmtPts(s.qualified)}</span></div>
-                          <div><span className="pacing-badge" style={{ color: diff >= 0 ? "#16a34a" : "#dc2626" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)}</span></div>
+                          <div><span className="pacing-badge" style={{ color: diff >= 0 ? "#16a34a" : "#000000" }}>{diff >= 0 ? `+${fmtPts(diff)}` : fmtPts(diff)}</span></div>
                           <div><StatusPill status={st} /></div>
                         </div>
                       </div>
