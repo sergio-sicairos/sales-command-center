@@ -41,6 +41,9 @@ const AVATARS = {
   "Tyler Parod": "/avatars/tyler-parod.jpeg",
   "Izzy Weiss": "/avatars/isabel-weiss.jpeg",
   "Shwetha Rajmohan": "/avatars/shwetha-rajmohan.png",
+  "Ajay Natarajan": "/avatars/ajay-natarajan.png",
+  "Hayes Ewald": "/avatars/hayes-ewald.png",
+  "Colin Hodgson": "/avatars/colin-hodgson.jpeg",
 };
 
 const QUOTES = [
